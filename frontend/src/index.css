@@ -4,17 +4,28 @@
 
 
 .layer {
-  @apply max-w-[1600px] m-auto
+  @apply max-w-[1300px] m-auto
 }
 
-* {
-  font-family: "Poppins", sans-serif;
-  margin: 0;
-  padding: 0;
+.back-img {
+  background-image: url(./assets/back-home.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 80% 42%;
+}
+
+.grid-cols-20 {
+  grid-template-columns: repeat(20, 1fr);
 }
 
 .font-secondary {
   font-family: "Kode Mono", monospace;
   font-optical-sizing: auto;
   font-style: normal;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
 }
