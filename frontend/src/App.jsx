@@ -1,12 +1,33 @@
-import Header from "./components/Header";
-import MainHome from "./components/MainHome";
-import backImg from "./assets/back-home.jpg";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Home from "./pages/Home";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Header from "./components/Header";
+
+const router = createBrowserRouter([
+  {
+    element: <Header />,
+    children: [
+      {
+        path: "/",
+        element: <Home />,
+      },
+      {
+        path: "login",
+        element: <Login />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+    ],
+  },
+]);
 
 export default function App() {
   return (
     <>
-      <Home />
+      <RouterProvider router={router} />
     </>
   );
 }

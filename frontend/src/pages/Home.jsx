@@ -9,22 +9,23 @@ import Footer from "../components/Footer";
 export default function Home() {
   return (
     <>
-      <Header />
-      <div className="back-img">
-        <div className="border-b-2 border-black min-h-[50vh]">
+      <div className="bg-dark">
+        <div className="border-b-2 border-light min-h-[50vh]">
           <MainHome />
         </div>
       </div>
-      <div className="layer pt-20 flex flex-col gap-10">
-        <QuizPopular />
+      <div className="bg-light">
+        <div className="layer pt-20 flex flex-col gap-10">
+          <QuizPopular />
 
-        <div className="flex gap-20 my-20">
-          <div className="flex-[2]">
-            <QuizByTopic />
+          <div className="flex gap-20 my-20">
+            <div className="flex-[2]">
+              <QuizByTopic />
+            </div>
+            <aside className="flex-1">
+              <Topics />
+            </aside>
           </div>
-          <aside className="flex-1">
-            <Topics />
-          </aside>
         </div>
       </div>
 

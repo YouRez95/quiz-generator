@@ -24,17 +24,17 @@ export default function QuizPopular() {
     <div className="relative">
       <SubTitleQuiz icon={HiTrendingUp} title={"Popular Quiz"} />
       <div
-        className="absolute bg-[#FFA701] cursor-pointer w-10 h-10 -right-6 z-10 top-[50%] flex items-center justify-center translate-y-[-50%]"
+        className="absolute bg-dark cursor-pointer w-10 h-10 -right-6 z-10 top-[50%] flex items-center justify-center translate-y-[-50%]"
         onClick={handleScrollRight}
       >
-        <IoIosArrowDropright className="text-3xl" />
+        <IoIosArrowDropright className="text-3xl text-light" />
       </div>
 
       <div
-        className="absolute bg-[#FFA701] cursor-pointer w-10 h-10 -left-6 z-10 top-[50%] flex items-center justify-center translate-y-[-50%]"
+        className="absolute bg-dark cursor-pointer w-10 h-10 -left-6 z-10 top-[50%] flex items-center justify-center translate-y-[-50%]"
         onClick={handleScrollLeft}
       >
-        <IoIosArrowDropleft className="text-3xl" />
+        <IoIosArrowDropleft className="text-3xl text-light" />
       </div>
 
       <div
@@ -44,29 +44,33 @@ export default function QuizPopular() {
         {quizPopular.map((quiz) => (
           <div
             key={quiz.id}
-            className="min-w-[300px] border-b-2 border-t-2 border-black"
+            className="min-w-[270px] rounded-lg border border-dark-3 p-3"
           >
-            <img src={quiz.img} alt={quiz.title} className=" bg-cover" />
-            <h3 className="font-secondary font-semibold uppercase">
+            <img
+              src={quiz.img}
+              alt={quiz.title}
+              className=" bg-cover rounded-md"
+            />
+            <h3 className="font-secondary font-semibold uppercase text-dark">
               {quiz.title}
             </h3>
-            <p className=" font-extralight">
+            <p className=" font-extralight text-dark-2">
               {quiz.description.substring(0, 50)}...
             </p>
-            <div className="flex justify-between items-center h-[3vh] border-t border-x border-black">
+            <div className="flex justify-between items-center h-[3vh] border border-dark-3">
               <div className="flex h-full">
-                <div className="flex items-center px-2 gap-2 border-r border-black">
+                <div className="flex items-center px-2 gap-2 border-r border-dark-3">
                   <BiLike />
-                  {quiz.likes}
+                  <p className="text-dark">{quiz.likes}</p>
                 </div>
-                <div className="flex items-center px-2 gap-2 border-r border-black">
-                  {quiz.comments}
+                <div className="flex items-center px-2 gap-2 border-r border-dark-3">
+                  <p className="text-dark">{quiz.comments}</p>
                   <GoComment />
                 </div>
               </div>
-              <div className="px-2 h-full flex items-center gap-2 border-l border-black">
+              <div className="px-2 h-full flex items-center gap-2 border-l border-dark-3">
                 <IoGameControllerOutline />
-                play quiz
+                <p className="text-dark">play quiz</p>
               </div>
             </div>
           </div>

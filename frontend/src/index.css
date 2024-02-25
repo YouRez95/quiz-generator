@@ -29,3 +29,29 @@
   margin: 0;
   padding: 0;
 }
+
+.height-calc {
+  min-height: calc(100vh - 71px);
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #12372A;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ADBC9F;
+  border-radius: 50px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #FBFADA;
+}

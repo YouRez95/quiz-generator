@@ -7,38 +7,38 @@ export default function QuizByTopic() {
   return (
     <div>
       <SubTitleQuiz title={"Other quizzes"} icon={MdOutlineQuiz} />
-      <div className="flex flex-col gap-5">
+      <div className="flex flex-col gap-9">
         {quizPopular.map((quiz) => (
           <>
-            <div key={quiz.id} className="flex gap-3 min-w-full">
+            <div
+              key={quiz.id}
+              className="flex gap-3 min-w-full border-dark-3 border px-2 py-4 rounded-lg"
+            >
               <img
                 src={quiz.img}
                 alt={quiz.title}
-                className="w-[150px] bg-cover"
+                className="w-[200px] bg-cover rounded-md"
               />
               <div className="flex flex-col w-full">
-                <h3 className="font-secondary text-xl font-semibold">
+                <h3 className="font-secondary text-xl font-semibold text-dark">
                   {quiz.title}
                 </h3>
-                <p className=" font-extralight">
+                <p className=" font-extralight text-dark-2">
                   {quiz.description.substring(0, 150)}...
                 </p>
                 <div className="flex items-center justify-between">
-                  <p className=" text-gray-500 text-sm font-medium">
-                    Jan 9, 2024
-                  </p>
-                  <div className="flex gap-4">
-                    <p className=" bg-gray-100 rounded-full px-2 py-1 text-gray-500 text-sm font-light">
-                      science
+                  <p className=" text-dark-3 text-sm">Jan 9, 2024</p>
+                  <div className="flex gap-4 items-center">
+                    <p className="bg-dark-3 text-light rounded-full px-3 py-1 text-sm">
+                      <span className="font-secondary">Science</span>
                     </p>
-                    <button className="bg-black px-2 py-1 rounded-full min-w-[90px] text-white">
-                      Play
+                    <button className="px-3 py-1 rounded-full min-w-[90px] text-light bg-dark">
+                      <span className="font-secondary">Play</span>
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            <div className="w-full bg-gray-200 h-[1px]" />
           </>
         ))}
       </div>
