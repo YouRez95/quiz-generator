@@ -1,30 +1,69 @@
 import { Link, Outlet } from "react-router-dom";
 import ButtonLtoR from "./ButtonLtoR";
+import { useContext, useState } from "react";
+import { UserContext } from "../store/user-context";
+import NavbarNotAuth from "./NavbarNotAuth";
+import { MdKeyboardArrowDown } from "react-icons/md";
 export default function Header() {
-  console.log("header render");
-
+  const { user, handleLogout } = useContext(UserContext);
+  const [dropOpen, setDropOpen] = useState(false);
   return (
     <>
-      <header className="border-b-2 border-light bg-dark sticky top-0 z-20">
-        <div className="flex justify-between h-[70px] items-center layer">
-          <Link to="/">
-            <h1 className="font-semibold text-3xl flex gap-1">
-              <span className="font-secondary text-dark bg-light px-2 inline-block">
+      {!user && <NavbarNotAuth />}
+
+      {user && (
+        <header className="border-b-2 border-dark bg-light sticky top-0 z-20">
+          <div className="flex justify-between h-[70px] items-center layer relative">
+            <Link to="/" className="w-[30px] text-lg h-[30px]">
+              <p className="font-secondary text-center text-dark border-2 border-dark block font-extrabold">
                 ?
-              </span>
-              <span className="self-end font-secondary text-light">Ouizzz</span>
-            </h1>
-          </Link>
-          <div className="flex gap-10 items-center font-medium">
-            <ButtonLtoR to="/register">Register</ButtonLtoR>
-            <Link to="/login">
-              <div className="text-light bg-black px-10 py-2 rounded-full cursor-pointer border border-light">
-                Login
-              </div>
+              </p>
             </Link>
+
+            <div className="flex gap-6">
+              <button className="bg-dark text-light px-4 py-2 rounded-full font-bold font-secondary">
+                Create Your Quiz
+              </button>
+
+              <div
+                className="cursor-pointer flex items-center"
+                onClick={() => setDropOpen((prev) => !prev)}
+              >
+                <img
+                  className="border-dark w-10 h-10 border-1 border rounded-full"
+                  src={`http://localhost:5000/avatars/${user.avatar}.png`}
+                  alt=""
+                />
+                <MdKeyboardArrowDown className=" w-6 h-6" />
+              </div>
+            </div>
+
+            {dropOpen && (
+              <div className="absolute bg-dark text-light top-[70px] transition-all right-0 w-[200px] p-3 rounded-lg">
+                <ul className="flex flex-col items-center w-full">
+                  <li className="w-full hover:bg-dark-2 rounded-md">
+                    <Link
+                      to="/profile"
+                      className="block w-full py-2  text-center"
+                    >
+                      Profile
+                    </Link>
+                  </li>
+
+                  <li className="w-full hover:bg-dark-2 rounded-md">
+                    <p
+                      className="block w-full py-2  text-center cursor-pointer"
+                      onClick={handleLogout}
+                    >
+                      Logout
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            )}
           </div>
-        </div>
-      </header>
+        </header>
+      )}
 
       <Outlet />
     </>

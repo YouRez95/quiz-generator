@@ -1,11 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 
-export default function PasswordForm({
-  id,
-  typePassword,
-  setTypePassword,
-  onChange,
-}) {
+export default function PasswordForm({ id, onChange }) {
+  const [typePassword, setTypePassword] = useState("password");
   return (
     <div className="flex flex-col gap-2 w-full">
       <label htmlFor="password" className="text-xl font-extralight text-light">
