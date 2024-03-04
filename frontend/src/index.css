@@ -1,0 +1,65 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+.layer {
+  @apply max-w-[1300px] m-auto
+}
+
+.back-img {
+  background-image: url(./assets/back-home.jpg);
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: 80% 42%;
+}
+
+.grid-cols-20 {
+  grid-template-columns: repeat(20, 1fr);
+}
+
+.font-secondary {
+  font-family: "Kode Mono", monospace;
+  font-optical-sizing: auto;
+  font-style: normal;
+}
+
+* {
+  font-family: "Poppins", sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+.height-calc {
+  min-height: calc(100vh - 71px);
+}
+
+.bg-position {
+  background-position: 200% 50%;
+}
+
+.custom-height {
+  height: calc(100vh - 72px);
+}
+
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #12372A;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #ADBC9F;
+  border-radius: 50px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #FBFADA;
+}
