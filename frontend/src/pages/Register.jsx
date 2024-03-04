@@ -33,6 +33,7 @@ export default function Register() {
     const isValidInputs = isValidRegisterForm(inputs);
     if (!isValidInputs.success) {
       setErrorMsg(isValidInputs.message);
+      return;
     }
 
     try {

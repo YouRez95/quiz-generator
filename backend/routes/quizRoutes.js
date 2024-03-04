@@ -1,11 +1,17 @@
 import {Router} from 'express'
-import { createQuestion, createQuiz, getAllQuizzes, getSingleQuiz } from '../controllers/quizControllers.js';
+import { createQuestion, createQuiz, getPopularQuizzes, getSingleQuiz, getTheTotalNumberOfQuestionInQuiz, getQuizzesByTopic } from '../controllers/quizControllers.js';
 import isAuthenticated from '../middelwares/isAuth.js';
 
 const router = Router()
 
 // POST -> /api/v1/quiz/create
 router.post('/create',isAuthenticated, createQuiz);
+
+// GET -> /api/v1/quiz/popularQuiz
+router.get('/popularQuiz', getPopularQuizzes);
+
+// GET -> /api/v1/quiz/search/:topic
+router.get('/search/:topic', getQuizzesByTopic)
 
 // POST -> /api/v1/quiz/:id
 router.post('/:id',isAuthenticated, createQuestion);
@@ -22,9 +28,11 @@ router.post('/:id',isAuthenticated, createQuestion);
 */
 router.get('/:id', getSingleQuiz);
 
+// GET -> /api/v1/quiz/number/:id
+router.get('/number/:id',isAuthenticated, getTheTotalNumberOfQuestionInQuiz);
 
-// GET -> /api/v1/quiz/all-quizzes
-router.get('/all-quizzes', getAllQuizzes);
+
+
 
 
 /* 

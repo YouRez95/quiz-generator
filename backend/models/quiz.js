@@ -27,6 +27,10 @@ const QuizSchema = new Schema({
     type: String,
     required: true
   },
+  numQuestion: {
+    type: Number,
+    required: true
+  },
   totalLikes: {
     type: Number,
     default: 0
@@ -35,6 +39,10 @@ const QuizSchema = new Schema({
     type: Number,
     default: 0
   },
+  isComplete: {
+    type: Boolean,
+    default: false
+  }
 }, {timestamps: true})
 
 

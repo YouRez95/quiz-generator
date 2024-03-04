@@ -1,12 +1,12 @@
-import { Link, Outlet } from "react-router-dom";
-import ButtonLtoR from "./ButtonLtoR";
-import { useContext, useState } from "react";
+import { Link, Outlet, useParams } from "react-router-dom";
+import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../store/user-context";
 import NavbarNotAuth from "./NavbarNotAuth";
 import { MdKeyboardArrowDown } from "react-icons/md";
-export default function Header() {
+export default function Header({ inCreateQuiz }) {
   const { user, handleLogout } = useContext(UserContext);
   const [dropOpen, setDropOpen] = useState(false);
+
   return (
     <>
       {!user && <NavbarNotAuth />}
@@ -21,9 +21,13 @@ export default function Header() {
             </Link>
 
             <div className="flex gap-6">
-              <button className="bg-dark text-light px-4 py-2 rounded-full font-bold font-secondary">
-                Create Your Quiz
-              </button>
+              {!inCreateQuiz && (
+                <button className="bg-dark text-light px-4 py-2 rounded-full font-bold">
+                  <Link className="font-secondary" to="/create-quiz">
+                    Create Your Quiz
+                  </Link>
+                </button>
+              )}
 
               <div
                 className="cursor-pointer flex items-center"

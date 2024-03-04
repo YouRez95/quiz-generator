@@ -40,7 +40,7 @@ export default function Login() {
       <div className="flex items-start justify-start height-calc bg-light">
         <div className="text-light flex flex-col items-center pt-20 gap-7 w-[50vw] height-calc bg-dark px-10">
           <h2 className="font-bold  mt-10 text-4xl font-secondary">
-            Hi, Welcome to Quizzz
+            Hi, Welcome Back
           </h2>
           <form className="flex flex-col gap-4" onSubmit={handleSubmitForm}>
             <InputForm
@@ -76,6 +76,8 @@ export default function Login() {
             </div>
           )}
         </div>
+
+        {/* <div className="bg-img-light bg-cover bg-position w-[50%] h-[90vh]" /> */}
       </div>
     </div>
   );

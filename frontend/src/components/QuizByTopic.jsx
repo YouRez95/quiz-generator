@@ -1,18 +1,48 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import { MdOutlineQuiz } from "react-icons/md";
 import SubTitleQuiz from "./SubTitleQuiz";
 import { quizPopular } from "../data";
+import Loading from "./Loading";
+import { getQuizzesByTopic } from "../api";
 
-export default function QuizByTopic() {
+export default function QuizByTopic({ topic }) {
+  const [dataQuizByTopic, setDataQuizByTopic] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState(null);
+
+  async function handleQuizByTopic() {
+    setLoading(true);
+    try {
+      const resData = await getQuizzesByTopic(topic.topic);
+      setDataQuizByTopic(resData.data);
+      setLoading(false);
+    } catch (err) {
+      setErrorMsg(err.message);
+      setLoading(false);
+    }
+  }
+
+  useEffect(() => {
+    handleQuizByTopic();
+  }, [topic]);
+
+  if (errorMsg) {
+    return <div>{errorMsg}</div>;
+  }
+
   return (
     <div>
-      <SubTitleQuiz title={"Other quizzes"} icon={MdOutlineQuiz} />
-      <div className="flex flex-col gap-9">
-        {quizPopular.map((quiz) => (
-          <Fragment key={quiz.id}>
-            <div className="flex gap-3 min-w-full border-dark-3 border px-2 py-4 rounded-lg">
+      <SubTitleQuiz title={topic.topic} icon={topic.icon} />
+      {loading && <Loading />}
+      {!loading && (
+        <div className="flex flex-col gap-9">
+          {dataQuizByTopic.map((quiz) => (
+            <div
+              key={quiz._id}
+              className="flex gap-3 min-w-full border-dark-3 border px-2 py-4 rounded-lg"
+            >
               <img
-                src={quiz.img}
+                src={`http://localhost:5000/${quiz.backImage}`}
                 alt={quiz.title}
                 className="w-[200px] bg-cover rounded-md"
               />
@@ -26,10 +56,12 @@ export default function QuizByTopic() {
                   </p>
                 </div>
                 <div className="flex items-center justify-between ">
-                  <p className=" text-dark-3 text-sm">Jan 9, 2024</p>
+                  <p className=" text-dark-3 text-sm">
+                    {quiz.createdAt.substring(0, 10)}
+                  </p>
                   <div className="flex gap-4 items-center">
                     <p className="bg-dark-3 text-light rounded-full px-3 py-1 text-sm">
-                      <span className="font-secondary">Science</span>
+                      <span className="font-secondary">{quiz.category[0]}</span>
                     </p>
                     <button className="px-3 py-1 rounded-full min-w-[90px] text-light bg-dark">
                       <span className="font-secondary">Play</span>
@@ -38,9 +70,9 @@ export default function QuizByTopic() {
                 </div>
               </div>
             </div>
-          </Fragment>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

@@ -34,6 +34,14 @@
   min-height: calc(100vh - 71px);
 }
 
+.bg-position {
+  background-position: 200% 50%;
+}
+
+.custom-height {
+  height: calc(100vh - 72px);
+}
+
 
 /* width */
 ::-webkit-scrollbar {
