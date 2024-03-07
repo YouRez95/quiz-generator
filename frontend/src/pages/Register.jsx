@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import ButtonLtoR from "../components/ButtonLtoR";
 import AvatarRegister from "../components/AvatarRegister";
 import InputForm from "../components/InputForm";
@@ -6,8 +6,11 @@ import PasswordForm from "../components/PasswordForm";
 import Modal from "../components/Modal";
 import { isValidRegisterForm } from "../utils/validForm";
 import { createUser } from "../api";
+import { Navigate } from "react-router-dom";
+import { UserContext } from "../store/user-context";
 
 export default function Register() {
+  const { user, loadingUser } = useContext(UserContext);
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(false);
   const [successRegister, setSuccessRegister] = useState(false);
@@ -49,6 +52,10 @@ export default function Register() {
       }
     }
     setLoading(false);
+  }
+
+  if (!loadingUser && user) {
+    return <Navigate to="/" />;
   }
 
   return (

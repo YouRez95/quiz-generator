@@ -135,3 +135,42 @@ export async function getTheThenPopularQuiz() {
 
     return resData;
 }
+
+
+
+export async function getMyQuizzesInDashboard(token){
+  const response = await fetch("http://localhost:5000/api/v1/user/quizzes", {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    const resData = await response.json();
+    if (!response.ok) {
+      const errorMessage = resData.message;
+      throw new Error(errorMessage);
+    }
+    
+    return resData;
+}
+
+
+
+export async function likeOrDislikeQuiz(token, quizId) {
+  const response = await fetch(
+    "http://localhost:5000/api/v1/user/like-quiz",
+    {
+      method: "POST",
+      body: JSON.stringify({ quizId }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `bearer ${token}`,
+      },
+    }
+  );
+  const resData = await response.json();
+  if (!response.ok) {
+    throw new Error(resData.message)
+  }
+  return resData;
+}

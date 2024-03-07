@@ -10,6 +10,7 @@ import DashboardStatistiques from "./components/DashboardStatistiques";
 import DashboardQuizzes from "./components/DashboardQuizzes";
 import DashboardNotifications from "./components/DashboardNotifications";
 import DashboardSetting from "./components/DashboardSetting";
+import DashboardDraft from "./components/DashboardDraft";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
         children: [
           { index: true, element: <DashboardStatistiques /> },
           { path: "quizzes", element: <DashboardQuizzes /> },
+          { path: "draft", element: <DashboardDraft /> },
           { path: "notifications", element: <DashboardNotifications /> },
           { path: "settings", element: <DashboardSetting /> },
         ],

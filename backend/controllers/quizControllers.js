@@ -167,10 +167,6 @@ export async function getQuizzesByTopic(req, res) {
     console.log(err);
     return res.status(500).json({message: "Something Wrong Try Again Later"});
   }
-  
-
-
-  
 }
 
 
