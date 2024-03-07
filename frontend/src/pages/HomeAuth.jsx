@@ -2,10 +2,16 @@ import { SlLike } from "react-icons/sl";
 import { GoComment } from "react-icons/go";
 import { HiTrendingUp } from "react-icons/hi";
 import { quizPopular, topics } from "../data";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { randomIndex } from "../utils/randomIndex";
-import { getQuizzesByTopic, getTheThenPopularQuiz } from "../api";
+import {
+  getQuizzesByTopic,
+  getTheThenPopularQuiz,
+  likeOrDislikeQuiz,
+} from "../api";
 import Loading from "../components/Loading";
+import { UserContext } from "../store/user-context";
+import Comments from "../components/Comments";
 
 const categories = [
   {
@@ -17,9 +23,14 @@ const categories = [
 ];
 
 export default function HomeAuth() {
+  const { token } = useContext(UserContext);
   const [categorySelected, setCategorySelected] = useState(categories[0]);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [showComments, setShowComments] = useState({
+    quizId: "",
+    isShow: false,
+  });
 
   async function handleData() {
     let dataSelected;
@@ -33,12 +44,32 @@ export default function HomeAuth() {
     setIsLoading(false);
   }
 
+  async function handleLikeQuiz(quizId, index) {
+    // TODO: show liked or not liked and increment or decrement depends on like or not like sync
+    try {
+      const resData = await likeOrDislikeQuiz(token, quizId);
+      setData((prev) => {
+        const quizLiked = [...prev];
+        quizLiked[index].totalLikes = resData.quiz.totalLikes;
+        return quizLiked;
+      });
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   useEffect(() => {
     handleData();
   }, [categorySelected]);
 
   return (
     <div className="layer">
+      {showComments.isShow && (
+        <Comments
+          showComments={showComments}
+          setShowComments={setShowComments}
+        />
+      )}
       <div className="mt-20">
         <ul className="flex border-b border-dark-3 w-fit font-medium text-dark">
           {categories.map((category) => (
@@ -56,9 +87,11 @@ export default function HomeAuth() {
 
         {isLoading && <Loading />}
 
-        {!isLoading && (
+        {!isLoading && data.length === 0 && <div>Not Found Any Quiz</div>}
+
+        {!isLoading && data.length > 0 && (
           <div className="mt-20 flex flex-col gap-20">
-            {data.map((quiz) => (
+            {data.map((quiz, index) => (
               <div
                 key={quiz._id}
                 className="flex gap-5 relative max-w-[1000px]"
@@ -87,14 +120,25 @@ export default function HomeAuth() {
                     <div className="flex gap-7">
                       <div className="flex gap-2 items-center">
                         <div className="border border-dark rounded-full w-6 h-6 p-1 flex place-content-center">
-                          <SlLike className="font-bold rounded-full" />
+                          <SlLike
+                            className="font-bold rounded-full cursor-pointer"
+                            onClick={() => handleLikeQuiz(quiz._id, index)}
+                          />
                         </div>
                         <span>{quiz.totalLikes}</span>
                       </div>
 
                       <div className="flex gap-2 items-center">
                         <div className="border border-dark rounded-full w-6 h-6 p-1 flex place-content-center">
-                          <GoComment className="font-bold rounded-full" />
+                          <GoComment
+                            className="font-bold rounded-full cursor-pointer"
+                            onClick={() =>
+                              setShowComments({
+                                quizId: quiz._id,
+                                isShow: true,
+                              })
+                            }
+                          />
                         </div>
                         <span>{quiz.totalComments}</span>
                       </div>

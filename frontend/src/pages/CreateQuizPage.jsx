@@ -4,13 +4,13 @@ import InputWithEmojis from "../components/InputWithEmojis";
 import TopicSelectedInForm from "../components/TopicSelectedInForm";
 import ImageSelectedInForm from "../components/ImageSelectedInForm";
 import { UserContext } from "../store/user-context";
-import { useNavigate } from "react-router-dom";
+import { Navigate, useNavigate } from "react-router-dom";
 import { createQuiz } from "../api";
 import { MdErrorOutline } from "react-icons/md";
 
 export default function CreateQuizPage() {
   const navigate = useNavigate();
-  const { token } = useContext(UserContext);
+  const { token, user } = useContext(UserContext);
   const [titleInput, setTitleInput] = useState("");
   const [descInput, setDescInput] = useState("");
   const [file, setFile] = useState(null);
@@ -57,6 +57,10 @@ export default function CreateQuizPage() {
       setLoading(false);
       setError(err.message);
     }
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
   return (

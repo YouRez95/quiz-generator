@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Navigate } from "react-router-dom";
 import { UserContext } from "../store/user-context";
 import FormCreateQuestion from "../components/FormCreateQuestion";
 import TotalQuestionLineInCreateQuestionPage from "../components/TotalQuestionLineInCreateQuestionPage";
@@ -14,7 +14,7 @@ const initialData = {
 };
 
 export default function CreateQuestions() {
-  const { token } = useContext(UserContext);
+  const { token, user } = useContext(UserContext);
   const navigate = useNavigate();
   const { id } = useParams();
   const [questionData, setQuestionData] = useState(initialData);
@@ -58,6 +58,10 @@ export default function CreateQuestions() {
       setLoading(false);
       setErrorMsg(err.message);
     }
+  }
+
+  if (!user) {
+    return <Navigate to="/login" />;
   }
 
   return (

@@ -1,14 +1,17 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import InputForm from "../components/InputForm";
 import PasswordForm from "../components/PasswordForm";
 import ButtonLtoR from "../components/ButtonLtoR";
 import { isValidLoginForm } from "../utils/validForm";
 import { loginUser } from "../api";
+import { UserContext } from "../store/user-context";
+import { Navigate } from "react-router-dom";
 
 export default function Login() {
   const [inputs, setInputs] = useState({ email: "", password: "" });
   const [errorMsg, setErrorMsg] = useState(null);
   const [loading, setLoading] = useState(false);
+  const { user, loadingUser } = useContext(UserContext);
   function handleChangeInput(value, identifier) {
     setInputs((prev) => ({
       ...prev,
@@ -33,6 +36,10 @@ export default function Login() {
       setErrorMsg(err.message);
     }
     setLoading(false);
+  }
+
+  if (!loadingUser && user) {
+    return <Navigate to="/" />;
   }
 
   return (

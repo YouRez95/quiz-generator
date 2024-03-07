@@ -2,6 +2,9 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken'
 import User from "../models/user.js";
 import { validationResult } from "express-validator";
+import Quiz from '../models/quiz.js';
+import Question from '../models/question.js';
+import LikeModel from '../models/likes.js';
 
 
 // /api/v1/user/signup
@@ -52,5 +55,87 @@ async function postUserLogin(req, res) {
   res.status(200).json({message: "login success", data: {user: rest, token: token }})
 }
 
+// GET -> /api/v1/user/quizzes
+async function getMyQuizzes(req, res) {
+  try {
+    const userId = req.userId;
+    const quizzes = await Quiz.find({userId, isComplete: true})
+    res.status(200).json({message: "success", data: quizzes})
+  } catch(err) {
+    console.log(err)
+    res.status(500).json({message: 'Something Wrong Try Again Later'})
+  }
+}
 
-export {postUserSignup, postUserLogin};
+// GET -> /api/v1/user/draft
+async function getMyQuizzesDraft(req, res) {
+  try {
+    const userId = req.userId;
+    const quizzes = await Quiz.find({userId, isComplete: false}).select('-userId -isComplete -totalLikes -totalComments -publicQuiz')
+
+    const quizzesToSend = []
+    for (const quiz of quizzes) {
+      const questionFounded = await Question.countDocuments({quizId: quiz._id})
+      quizzesToSend.push({...quiz._doc, totalQuestionFounded: questionFounded})
+    }
+
+    res.status(200).json({message: "success", data: quizzesToSend})
+  } catch(err) {
+    console.log(err)
+    res.status(500).json({message: 'Something Wrong Try Again Later'})
+  }
+}
+
+// POST -> /api/v1/user/profile
+async function changeUserProfile(req, res) {
+  try {
+    const {username, fullname, avatar} = req.body;
+    const user = await User.findById(req.userId).select('-password -email')
+
+    if (username && (username !== user.username)) {
+      user.username = username;
+    }
+  
+    if (fullname && (fullname !== user.fullname)) {
+      user.fullname = fullname;
+    }
+  
+    if (avatar && (avatar !== user.avatar)) {
+      user.avatar = avatar;
+    }
+  
+    const userUpdated = await user.save();
+    res.status(201).json({message: "success", user: userUpdated})
+  } catch(err) {
+    console.log(err);
+    res.status(500).json({message: 'Something Wrong Try Again Later'})
+  }
+}
+
+
+// POST -> /api/v1/user/like-quiz
+async function likeQuiz(req, res) {
+
+  try {
+    const userId = req.userId;
+  const { quizId } = req.body;
+
+  const isLiked = await LikeModel.findOne({quizId, userId});
+  const quizLiked = await Quiz.findById(quizId);
+  if (isLiked){
+    await LikeModel.findByIdAndDelete(isLiked._id);
+    quizLiked.totalLikes--;
+  } else {
+    await LikeModel.create({userId, quizId});
+    quizLiked.totalLikes++;
+  }
+  await quizLiked.save();
+  res.status(200).json({message: "OK", quiz: quizLiked});
+  } catch (err) {
+    res.status(500).json({message: "something wrong try again later"})
+  }
+  
+}
+
+
+export {postUserSignup, postUserLogin, getMyQuizzes, changeUserProfile, getMyQuizzesDraft, likeQuiz};
