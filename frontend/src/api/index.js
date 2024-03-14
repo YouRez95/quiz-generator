@@ -174,3 +174,15 @@ export async function likeOrDislikeQuiz(token, quizId) {
   }
   return resData;
 }
+
+
+export async function getSingleQuizToPlay(id){
+  const response = await fetch(`http://localhost:5000/api/v1/quiz/${id}`);
+  const quizData = await response.json();
+
+  if (!response.ok) {
+    throw new Error(quizData.message);
+  }
+
+  return quizData
+}

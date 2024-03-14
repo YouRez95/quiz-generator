@@ -5,6 +5,9 @@ import { validationResult } from "express-validator";
 import Quiz from '../models/quiz.js';
 import Question from '../models/question.js';
 import LikeModel from '../models/likes.js';
+import Comment from '../models/comments.js';
+import { isValidId } from './quizControllers.js';
+import Score from '../models/scoreUser.js';
 
 
 // /api/v1/user/signup
@@ -118,24 +121,132 @@ async function likeQuiz(req, res) {
 
   try {
     const userId = req.userId;
-  const { quizId } = req.body;
+    const { quizId } = req.body;
 
-  const isLiked = await LikeModel.findOne({quizId, userId});
-  const quizLiked = await Quiz.findById(quizId);
-  if (isLiked){
-    await LikeModel.findByIdAndDelete(isLiked._id);
-    quizLiked.totalLikes--;
-  } else {
-    await LikeModel.create({userId, quizId});
-    quizLiked.totalLikes++;
-  }
-  await quizLiked.save();
-  res.status(200).json({message: "OK", quiz: quizLiked});
+    const isLiked = await LikeModel.findOne({quizId, userId});
+    const quizLiked = await Quiz.findById(quizId);
+    if (isLiked){
+      await LikeModel.findByIdAndDelete(isLiked._id);
+      quizLiked.totalLikes--;
+    } else {
+      await LikeModel.create({userId, quizId});
+      quizLiked.totalLikes++;
+    }
+    await quizLiked.save();
+    res.status(200).json({message: "OK", quiz: quizLiked});
   } catch (err) {
     res.status(500).json({message: "something wrong try again later"})
+  }
+}
+
+// POST -> /api/v1/user/comment-quiz
+async function postCommentQuiz(req, res) {
+  
+  try {
+    const userId = req.userId;
+    const {quizId, text} = req.body;
+    console.log(req.body)
+  
+    if (!quizId || !text) {
+      const error = new Error('comment required')
+      error.statusCode = 400
+      throw error;
+    }
+    const newComment = await Comment.create({userId, quizId, text});
+    if (!newComment) {
+      const error = new Error('comment failed')
+      error.statusCode = 400
+      throw error;
+    }
+    const quizCommented = await Quiz.findById(quizId)
+    quizCommented.totalComments += 1;
+    await quizCommented.save()
+    res.status(200).json({message: "success", data: newComment._doc});
+  } catch (err) {
+    console.log(err);
+    res.status(err.statusCode || 500).json({message: err.message || "Something wrong try again later"})
+  }
+}
+
+
+// GET -> /api/v1/user/comment-quiz/:quizId
+async function getCommentQuiz(req, res) {
+  try {
+    const {quizId} = req.params;
+    if (!isValidId(quizId)) {
+      const error = new Error("Not Found");
+      error.statusCode = 404;
+      throw error;
+    }
+  
+    const commentsFounded = await Comment.find({quizId}).sort({'createdAt': -1}).populate('userId', 'username avatar _id');
+    if (!commentsFounded) {
+      const error = new Error("Not Found");
+      error.statusCode = 404;
+      throw error;
+    }
+    res.status(200).json({message: "success", data: commentsFounded});
+  } catch(err) {
+    res.status(err.statusCode || 500).json({message: err.message || "Something wrong try again later"});
+  }
+  
+}
+
+// POST -> /api/v1/user/score-quiz/:quizId
+
+async function postTheScoreQuiz(req, res){
+
+  try {
+    const {quizId} = req.params;
+
+    if (!isValidId(quizId)) {
+      const error = new Error('Quiz Not Found');
+      error.statusCode = 404;
+      throw error;
+    }
+  
+    const userId = req.userId;
+    const {score} = req.body;
+
+    const newScore = await Score.create({userId, quizId, score});
+    return res.status(200).json({message: "score created", data: newScore._doc})
+
+  } catch(err) {
+    return res.status(err.statusCode || 500).json({message: err.message || "Something wrong try again later"});
+  }
+}
+
+
+// PUT -> api/v1/user/update-quiz/:quizId
+async function updateQuiz(req, res){
+
+  try {
+    const {quizId} = req.params;
+    const {title, description, category, numQuestion, publicQuiz} = req.body;
+    console.log(req.body)
+  
+    // Check if the userId = quiz.userId
+    const quiz = await Quiz.findById(quizId)
+    if (!(quiz && quiz.userId.toString() === req.userId.toString())) {
+      const error = new Error('Quiz Not Found');
+      error.statusCode = 400;
+      throw error;
+    }
+
+    if (req.file) {
+      const [,...rest] = req.file.path.split('/')
+      const urlImage = rest.join('/')
+      const backImage = urlImage
+      await Quiz.findByIdAndUpdate(quizId, {title, description, category, numQuestion, publicQuiz, backImage})
+    } else {
+      await Quiz.findByIdAndUpdate(quizId, {title, description, category, numQuestion, publicQuiz})
+    }
+    res.status(200).json({message: "success update"})    
+  } catch (err) {
+    res.status(err.statusCode || 500).json({message: err.message || "Something wrong try again later"})
   }
   
 }
 
 
-export {postUserSignup, postUserLogin, getMyQuizzes, changeUserProfile, getMyQuizzesDraft, likeQuiz};
+export {postUserSignup, postUserLogin, getMyQuizzes, changeUserProfile, getMyQuizzesDraft, likeQuiz, postCommentQuiz, getCommentQuiz, postTheScoreQuiz, updateQuiz};

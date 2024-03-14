@@ -4,6 +4,7 @@ import { GoHeart } from "react-icons/go";
 import { LiaCommentSolid } from "react-icons/lia";
 import Loading from "./Loading";
 import { getMyQuizzesInDashboard } from "../api";
+import { Link } from "react-router-dom";
 
 export default function DashboardQuizzes() {
   const { token } = useContext(UserContext);
@@ -33,56 +34,62 @@ export default function DashboardQuizzes() {
   }
 
   return (
-    <div className="pt-20 grid gap-10">
-      <h1 className="text-dark font-secondary text-3xl font-bold">Quizzes</h1>
-
+    <>
       {isLoading && <Loading />}
 
       {!isLoading && quizzes.length === 0 ? (
         <div>No quizzes founded</div>
       ) : (
-        <ul className="flex flex-wrap justify-center gap-7">
+        <ul className="flex flex-wrap justify-center gap-x-7 gap-y-10  mb-20 cursor-pointer">
           {quizzes.map((quiz) => (
             <li
               key={quiz._id}
-              className={`min-w-[300px] max-w-[300px] p-2 relative rounded-lg flex flex-col justify-between bg-light border border-dark-3`}
+              className="w-[250px] flex flex-col justify-between hover:scale-110 transition-all group"
             >
-              <div className="absolute left-[50%] translate-x-[-50%] border border-dark-3 -top-10 rounded-full w-[110px] bg-dark h-[110px] overflow-hidden">
+              <div className="w-full h-[200px] overflow-hidden rounded-lg relative">
                 <img
                   src={`http://localhost:5000/${quiz.backImage}`}
                   alt=""
-                  className="bg-contain w-full h-full"
+                  className="object-cover w-full h-full"
                 />
+                <div className="bg-dark opacity-50 absolute w-full h-full top-0 bottom-0 hidden group-hover:block" />
+                <button className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-light text-dark font-secondary px-4 py-2 hidden group-hover:block hover:bg-dark-2 hover:text-light">
+                  See Demo
+                </button>
               </div>
 
-              <div className="mt-20 flex flex-col items-center text-center">
-                <h3 className="font-secondary font-medium text-[15px]">
+              <div className="mt-2">
+                <h2 className="font-secondary font-bold text-md text-dark">
                   {quiz.title}
-                </h3>
-
-                <p className="text-sm mt-6">
-                  {quiz.description.substring(0, 70)}
+                </h2>
+                <p className="font-light text-dark-2 text-sm">
+                  {quiz.description}
                 </p>
               </div>
-              <div className="mt-7 flex justify-center gap-10 items-center">
-                <div className="flex flex-col justify-center items-center">
-                  <p className="text-xl">{quiz.totalLikes}</p>
-                  <GoHeart className="text-xl" />
+              <div className="flex items-center justify-between">
+                <div className="flex gap-4">
+                  <div className="flex items-center gap-1">
+                    <p className="text-md">{quiz.totalLikes}</p>
+                    <GoHeart className="text-md" />
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <p className="text-md">{quiz.totalComments}</p>
+                    <LiaCommentSolid className="text-md" />
+                  </div>
                 </div>
-                <div className="h-full w-[.5px] bg-dark-3 " />
-                <div className="flex flex-col justify-center items-center">
-                  <p className="text-xl">{quiz.totalComments}</p>
-                  <LiaCommentSolid className="text-xl" />
-                </div>
-              </div>
-              <div className="mt-10 bg-dark text-light rounded-full py-3 cursor-pointer font-secondary flex justify-center items-center">
-                Update The quiz
+
+                <Link
+                  to={`update/${quiz._id}`}
+                  className="bg-dark text-light border border-dark text-md px-2 py-1 font-secondary hover:bg-light hover:text-dark"
+                >
+                  Update Quiz
+                </Link>
               </div>
             </li>
           ))}
         </ul>
       )}
-    </div>
+    </>
   );
 }
 // backImage

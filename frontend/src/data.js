@@ -6,6 +6,13 @@ import { GrCloudComputer } from "react-icons/gr";
 import { MdOutlineSportsSoccer } from "react-icons/md";
 import { MdOutlineQuiz } from "react-icons/md";
 
+import playQuiz1 from './assets/background-play-quiz/back1.jpg'
+import playQuiz2 from './assets/background-play-quiz/back2.jpg'
+import playQuiz3 from './assets/background-play-quiz/back3.jpg'
+import playQuiz4 from './assets/background-play-quiz/back4.jpg'
+import playQuiz5 from './assets/background-play-quiz/back5.jpg'
+import playQuiz6 from './assets/background-play-quiz/back6.jpg'
+
 import avatar1 from './assets/avatars/avatar1.png'
 import avatar2 from './assets/avatars/avatar2.png'
 import avatar3 from './assets/avatars/avatar3.png'
@@ -246,3 +253,5 @@ export const topics = [
     icon: MdOutlineQuiz
   }
 ]
+
+export const PLAY_QUIZ_BACKGROUND = [playQuiz1, playQuiz2, playQuiz3, playQuiz4, playQuiz5, playQuiz6]

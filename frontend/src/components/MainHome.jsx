@@ -1,15 +1,4 @@
 import React from "react";
-
-// const quizLetter = [];
-// function randomCharacter() {
-//   for (let i = 0; i < 200; i++) {
-//     const myNum = Math.floor(Math.random() * 10);
-//     quizLetter.push({
-//       num: myNum,
-//       letter: "?",
-//     });
-//   }
-// }
 export default function MainHome() {
   return (
     <div className="layer flex gap-10 relative z-10">
@@ -31,8 +20,8 @@ export default function MainHome() {
 
         <div>
           <button className="relative px-7 py-3 text-white border-light border overflow-hidden font-bold group">
-            <div className="bg-light absolute w-full h-full top-0 left-0 transition-all group-hover:-left-[100%]" />
-            <div className="relative font-secondary group-hover:text-light">
+            <div className="bg-light absolute w-full h-full top-0  transition-all -left-[100%] group-hover:left-0" />
+            <div className="relative font-secondary text-light group-hover:text-dark">
               Create Your Quiz
             </div>
           </button>

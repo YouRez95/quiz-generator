@@ -1,5 +1,5 @@
 import {Router} from 'express'
-import { createQuestion, createQuiz, getPopularQuizzes, getSingleQuiz, getTheTotalNumberOfQuestionInQuiz, getQuizzesByTopic } from '../controllers/quizControllers.js';
+import { createQuestion, createQuiz, getPopularQuizzes, getSingleQuiz, getTheTotalNumberOfQuestionInQuiz, getQuizzesByTopic, getSingleQuizToUpdate } from '../controllers/quizControllers.js';
 import isAuthenticated from '../middelwares/isAuth.js';
 
 const router = Router()
@@ -37,14 +37,15 @@ router.get('/number/:id',isAuthenticated, getTheTotalNumberOfQuestionInQuiz);
 
 /* 
 @desc update quiz
-@route GET -> /api/v1/quiz/:id
-@access Public
+@route GET -> /api/v1/quiz/update/:id
+@access Private
 @responses
     201: description: Created
     409: description: Conflict
     404: description: Not Found
     500: desccription: Server Error
 */
+router.get('/update/:id',isAuthenticated, getSingleQuizToUpdate);
 
 /* 
 @desc update question

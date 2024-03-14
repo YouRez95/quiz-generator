@@ -5,9 +5,12 @@ import cors from 'cors'
 import express from "express";
 import mongoose from "mongoose";
 import multer from 'multer'
+import http from 'http';
+import {Server} from 'socket.io'
 import connectToDb from "./db/connection.js";
 import userRoutes from "./routes/userRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
+import { init } from "./socket.js";
 // Create the server
 const app = express();
 
@@ -42,12 +45,23 @@ app.use('/api/v1/user', userRoutes)
 
 app.use('/api/v1/quiz', quizRoutes)
 
+
+
+// Run the socket server
+const server = http.createServer(app)
+const io = init(server);
+
+io.on('connect', (socket) => {
+  console.log('Client connected');
+})
+
+
 // Run the server
 const PORT = process.env.PORT || 5000
 const MONGO_URL = process.env.MONGO_URL
 
 connectToDb(MONGO_URL).then(() => {
-  app.listen(PORT, () => {
+  server.listen(PORT, () => {
     console.log('server listening on port ' + PORT)
   })
 })
