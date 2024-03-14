@@ -21,13 +21,13 @@ export default function UserProfile() {
   return (
     <div className="w-full custom-height relative">
       <div
-        className={`absolute bg-dark top-0 bottom-0 text-light ${
+        className={`fixed bg-dark top-0 bottom-0 text-light ${
           menuOpen ? "w-[300px] px-9" : "w-[75px] px-3"
         }`}
       >
         <ul>
           <li
-            className=" cursor-pointer"
+            className=" cursor-pointer mt-[80px]"
             onClick={() => setMenuOpen((prev) => !prev)}
           >
             <NavLink

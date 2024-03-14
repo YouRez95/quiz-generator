@@ -1,9 +1,10 @@
 import Question from "../models/question.js";
 import Quiz from "../models/quiz.js";
 import mongoose from "mongoose";
+import { getIo } from "../socket.js";
 
 
-function isValidId(id) {
+export function isValidId(id) {
  return mongoose.Types.ObjectId.isValid(id)
 }
 
@@ -68,7 +69,8 @@ export async function createQuestion(req, res) {
     if (quizExist.numQuestion <= questionsFounded.length) {
       quizExist.isComplete = true;
       await quizExist.save();
-    } 
+      // getIo().emit('create-quiz', {action: 'create', quiz: quizExist._doc})
+    }
     return res.status(201).json({message: "Question Created", numQuestion: quizExist.numQuestion, isComplete: quizExist.isComplete})
   } catch(err) {
 
@@ -97,7 +99,7 @@ export async function getSingleQuiz(req, res){
       throw error
     }
 
-    if (quiz.publicQuiz === false) {
+    if (quiz.publicQuiz === false || quiz.isComplete === false) {
       const error = new Error()
       error.statusCode = 401;
       error.message = "Unauthorized";
@@ -118,6 +120,42 @@ export async function getSingleQuiz(req, res){
     res.status(200).json({message: 'success', data: {quiz,questions}})
   } catch(err) {
     return res.status(err.statusCode || 500).json({message: err.message});
+  }
+}
+
+// GET -> get the quiz and the question to update
+export async function getSingleQuizToUpdate(req, res){
+
+  const {id} = req.params;
+
+  try {
+    if (!isValidId(id)){
+      const error = new Error()
+      error.statusCode = 404;
+      error.message = "Quiz Not Found";
+      throw error
+    }
+    const quiz = await Quiz.findById(id);
+
+    if (!quiz) {
+      const error = new Error()
+      error.statusCode = 404;
+      error.message = "Quiz Not Found";
+      throw error
+    }
+
+    if (quiz.userId.toString() !== req.userId.toString()) {
+      const error = new Error()
+      error.statusCode = 401;
+      error.message = "Unauthorized";
+      throw error
+    }
+
+    const questions = await Question.find({quizId: quiz._id});
+
+    res.status(200).json({message: 'success', data: {quiz,questions}})
+  } catch(err) {
+    return res.status(err.statusCode || 500).json({message: err.message || "something wrong try again later"});
   }
 }
 

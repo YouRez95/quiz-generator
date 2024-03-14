@@ -11,6 +11,9 @@ import DashboardQuizzes from "./components/DashboardQuizzes";
 import DashboardNotifications from "./components/DashboardNotifications";
 import DashboardSetting from "./components/DashboardSetting";
 import DashboardDraft from "./components/DashboardDraft";
+import PlayQuiz from "./pages/PlayQuiz";
+import DashboardQuizzesRoot from "./components/DashboardQuizzesRoot";
+import DashboardQuizzesUpdate from "./components/DashboardQuizzesUpdate";
 
 const router = createBrowserRouter([
   {
@@ -33,7 +36,14 @@ const router = createBrowserRouter([
         element: <UserProfile />,
         children: [
           { index: true, element: <DashboardStatistiques /> },
-          { path: "quizzes", element: <DashboardQuizzes /> },
+          {
+            path: "quizzes",
+            element: <DashboardQuizzesRoot />,
+            children: [
+              { index: true, element: <DashboardQuizzes /> },
+              { path: "update/:quizId", element: <DashboardQuizzesUpdate /> },
+            ],
+          },
           { path: "draft", element: <DashboardDraft /> },
           { path: "notifications", element: <DashboardNotifications /> },
           { path: "settings", element: <DashboardSetting /> },
@@ -48,6 +58,10 @@ const router = createBrowserRouter([
   {
     path: "create-questions/:id",
     element: <CreateQuestions />,
+  },
+  {
+    path: "/play-quiz/:id",
+    element: <PlayQuiz />,
   },
 ]);
 

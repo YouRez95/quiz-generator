@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { RiUpload2Line } from "react-icons/ri";
-export default function ImageSelectedInForm({ setFile }) {
+export default function ImageSelectedInForm({ setFile, prevImage }) {
   const [image, setImage] = useState();
   const handleChangeImg = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -12,7 +12,9 @@ export default function ImageSelectedInForm({ setFile }) {
   return (
     <div className=" flex flex-col">
       <p className="text-md font-bold font-secondary">
-        Choose a profile picture for your quiz
+        {prevImage
+          ? "Choose another profile picture for your quiz"
+          : "Choose a profile picture for your quiz"}
       </p>
       <label
         className="w-10 h-10 rounded-full border flex justify-center items-center cursor-pointer self-center mt-2"
@@ -28,6 +30,9 @@ export default function ImageSelectedInForm({ setFile }) {
         accept="image/png, image/jpeg"
         onChange={handleChangeImg}
       />
+      {prevImage && !image && (
+        <img src={prevImage} alt="" className="w-60 cover self-center mt-2" />
+      )}
       {image && (
         <img src={image} alt="" className="w-60 cover self-center mt-2" />
       )}

@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { avatars } from "../data";
 import { UserContext } from "../store/user-context";
 import Loading from "./Loading";
@@ -32,7 +32,54 @@ const DUMMY_COMMENTS = [
 ];
 
 export default function Comments({ showComments, setShowComments }) {
-  const { user, loadingUser } = useContext(UserContext);
+  const { user, loadingUser, token } = useContext(UserContext);
+  const [commentsData, setCommentsData] = useState([]);
+  const [textInput, setTextInput] = useState("");
+
+  async function getComments() {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/user/comment-quiz/${showComments.quizId}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const resData = await response.json();
+    setCommentsData(resData.data);
+  }
+
+  async function createComments() {
+    const response = await fetch(
+      `http://localhost:5000/api/v1/user/comment-quiz`,
+      {
+        method: "POST",
+        body: JSON.stringify({ quizId: showComments.quizId, text: textInput }),
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    const resData = await response.json();
+    const newComment = {
+      _id: Math.random() * 1000,
+      userId: user,
+      text: textInput,
+      createdAt: new Date().toISOString().substring(0, 19),
+    };
+    setCommentsData((prev) => [newComment, ...prev]);
+    setTextInput("");
+  }
+
+  useEffect(() => {
+    if (token) {
+      getComments();
+    }
+  }, []);
+
   useEffect(() => {
     document.body.style.overflowY = "hidden";
     return () => (document.body.style.overflowY = "visible");
@@ -51,30 +98,41 @@ export default function Comments({ showComments, setShowComments }) {
 
         {loadingUser && <Loading />}
 
-        <div>
-          <ul className="flex flex-col gap-2 mb-4">
-            {DUMMY_COMMENTS.map((comment) => (
-              <li
-                key={comment.name}
-                className="flex gap-3 border border-dark-3 items-center p-3 relative"
-              >
-                <div className="w-[50px] h-[50px]">
-                  <img src={comment.picture} alt={comment.text} />
-                </div>
+        {!loadingUser && commentsData.length === 0 && (
+          <div className="font-secondary font-light text-center my-7">
+            No Comments Yet, be the first One
+          </div>
+        )}
 
-                <div>
-                  <h3 className="font-secondary text-md font-medium">
-                    {comment.name}
-                  </h3>
-                  <p className="text-sm">{comment.text}</p>
-                  <span className="absolute right-1 top-1 text-sm font-secondary text-dark-3">
-                    commented at {comment.date}
-                  </span>
-                </div>
-              </li>
-            ))}
-          </ul>
-        </div>
+        {!loadingUser && commentsData.length > 0 && (
+          <div>
+            <ul className="flex flex-col gap-2 mb-4">
+              {commentsData.map((comment) => (
+                <li
+                  key={comment._id}
+                  className="flex gap-3 border border-dark-3 items-center p-3 relative"
+                >
+                  <div className="w-[50px] h-[50px]">
+                    <img
+                      src={`http://localhost:5000/avatars/${comment.userId.avatar}.png`}
+                      alt={comment.userId.avatar}
+                    />
+                  </div>
+
+                  <div>
+                    <h3 className="font-secondary text-md font-medium">
+                      {comment.userId.username}
+                    </h3>
+                    <p className="text-sm">{comment.text}</p>
+                    <span className="absolute right-1 top-1 text-sm font-secondary text-dark-3">
+                      commented at {comment.createdAt.substring(0, 19)}
+                    </span>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         <div className="flex gap-3 border bg-light w-full right-0 left-0 border-dark-3 items-center p-3 sticky bottom-0 overflow-y-hidden">
           <div className="w-[50px] h-[50px]">
@@ -84,11 +142,16 @@ export default function Comments({ showComments, setShowComments }) {
             />
           </div>
           <input
+            value={textInput}
+            onChange={(e) => setTextInput(e.target.value)}
             type="text"
             placeholder="Add your comment here ..."
             className="flex-1 py-5 pl-5 outline-none bg-dark text-light rounded-lg"
           />
-          <LuSend className="absolute right-9 text-light bg-dark-2 rounded-full w-9 h-9 p-2 cursor-pointer" />
+          <LuSend
+            className="absolute right-9 text-light bg-dark-2 rounded-full w-9 h-9 p-2 cursor-pointer"
+            onClick={createComments}
+          />
         </div>
       </div>
     </>

@@ -34,7 +34,13 @@ export default function QuizByTopic({ topic }) {
     <div>
       <SubTitleQuiz title={topic.topic} icon={topic.icon} />
       {loading && <Loading />}
-      {!loading && (
+
+      {!loading && dataQuizByTopic.length === 0 && (
+        <div className="font-secondary text-center">
+          No quizzes created yet, Be the first....
+        </div>
+      )}
+      {!loading && dataQuizByTopic.length > 0 && (
         <div className="flex flex-col gap-9">
           {dataQuizByTopic.map((quiz) => (
             <div
@@ -44,7 +50,7 @@ export default function QuizByTopic({ topic }) {
               <img
                 src={`http://localhost:5000/${quiz.backImage}`}
                 alt={quiz.title}
-                className="w-[200px] bg-cover rounded-md"
+                className="w-[200px] h-[150px] bg-cover rounded-md object-cover"
               />
               <div className="flex flex-col w-full justify-between">
                 <div className="flex flex-col w-full">

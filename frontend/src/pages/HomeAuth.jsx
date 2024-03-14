@@ -1,4 +1,6 @@
-import { SlLike } from "react-icons/sl";
+import { socket } from "../socket";
+import { LuHeart } from "react-icons/lu";
+import { LuHeartOff } from "react-icons/lu";
 import { GoComment } from "react-icons/go";
 import { HiTrendingUp } from "react-icons/hi";
 import { quizPopular, topics } from "../data";
@@ -12,6 +14,7 @@ import {
 import Loading from "../components/Loading";
 import { UserContext } from "../store/user-context";
 import Comments from "../components/Comments";
+import { Link } from "react-router-dom";
 
 const categories = [
   {
@@ -62,6 +65,22 @@ export default function HomeAuth() {
     handleData();
   }, [categorySelected]);
 
+  // useEffect(() => {
+  // The problem here is when we ad new quiz, that quiz have categorie
+  // So we need to check if the quiz created is the same categorie displayed but the problem here is the catgorie selected go always to pupular
+  //   function syncQuizUi(dataSocket) {
+  //     console.log(data[0]);
+  //     if (dataSocket.quiz.category[0] === categorySelected.topic) {
+  //       setData((prev) => [...prev, dataSocket.quiz]);
+  //     }
+  //   }
+  //   socket.on("create-quiz", syncQuizUi);
+
+  //   return () => {
+  //     socket.off("create-quiz", syncQuizUi);
+  //   };
+  // }, []);
+
   return (
     <div className="layer">
       {showComments.isShow && (
@@ -87,71 +106,76 @@ export default function HomeAuth() {
 
         {isLoading && <Loading />}
 
-        {!isLoading && data.length === 0 && <div>Not Found Any Quiz</div>}
+        {!isLoading && data.length === 0 && (
+          <div className="font-secondary text-center my-10">
+            No quizzes created yet, Be the first....
+          </div>
+        )}
 
         {!isLoading && data.length > 0 && (
-          <div className="mt-20 flex flex-col gap-20">
+          <div className="grid grid-cols-5 gap-x-5 gap-y-10 mt-7">
             {data.map((quiz, index) => (
               <div
                 key={quiz._id}
-                className="flex gap-5 relative max-w-[1000px]"
+                className="flex flex-col gap-x-3 cursor-pointer group"
               >
-                <div className="w-[100px] h-[1px] bg-dark opacity-[.7] absolute -top-5 -left-5" />
-                <div className="w-[1px] h-[100px] bg-dark opacity-[.7] absolute -left-5 -top-5" />
+                <div className="relative w-[250px] h-[200px] bg-dark-3 overflow-hidden rounded-lg">
+                  <img
+                    className="object-cover absolute w-full h-full"
+                    src={`http://localhost:5000/${quiz.backImage}`}
+                    alt={quiz.title}
+                  />
+                  <div className="bg-dark w-full h-full absolute opacity-0 group-hover:opacity-50 transition-all" />
 
-                <div className="w-[100px] h-[1px] bg-dark opacity-[.7] absolute -bottom-5 -right-5" />
-                <div className="w-[1px] h-[100px] bg-dark opacity-[.7] absolute -right-5 -bottom-5" />
+                  <p className="bg-dark-2 absolute text-sm font-secondary text-light top-2 left-2 border-1 border-light w-fit h-fit rounded-full px-1">
+                    {quiz.category}
+                  </p>
 
-                <img
-                  src={`http://localhost:5000/${quiz.backImage}`}
-                  alt={quiz.title}
-                  className="w-[250px] h-[150px] bg-cover rounded-xl"
-                />
-                <div className="flex flex-col justify-between flex-1">
-                  <div className="grid gap-2">
-                    <h2 className="capitalize font-bold text-lg font-secondary">
+                  <Link
+                    to={`/play-quiz/${quiz._id}`}
+                    className="bg-dark flex justify-center items-center uppercase absolute font-secondary px-3 text-light -bottom-[100%] right-0 left-0 h-[20%] group-hover:bottom-0 transition-all border-dark border rounded-b-lg hover:text-dark hover:bg-light"
+                  >
+                    play
+                  </Link>
+
+                  <div className="absolute flex flex-col right-1 top-1 gap-3">
+                    <div
+                      className="border border-dark bg-light rounded-full w-7 h-7 p-1 flex justify-center items-center hover:scale-110"
+                      onClick={() => handleLikeQuiz(quiz._id, index)}
+                    >
+                      <LuHeart className="font-bold rounded-full cursor-pointer" />
+                    </div>
+                    <div className="border border-dark bg-light rounded-full w-7 h-7 p-1 flex gap-5 justify-center items-center hover:scale-110">
+                      <LuHeartOff className="font-bold rounded-full cursor-pointer" />
+                    </div>
+                    <div className="border border-dark bg-light rounded-full w-7 h-7 p-1 flex justify-center items-center hover:scale-110">
+                      <GoComment
+                        className="font-bold rounded-full cursor-pointer"
+                        onClick={() =>
+                          setShowComments({
+                            quizId: quiz._id,
+                            isShow: true,
+                          })
+                        }
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div className="flex flex-col mt-2 w-full">
+                  <div className="flex justify-between items-start w-full gap-3">
+                    <h3 className="text-[15px] font-bold font-secondary text-dark">
                       {quiz.title}
-                    </h2>
-                    <p className="text-dark-2 font-light text-sm">
-                      {quiz.description}
-                    </p>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <div className="flex gap-7">
-                      <div className="flex gap-2 items-center">
-                        <div className="border border-dark rounded-full w-6 h-6 p-1 flex place-content-center">
-                          <SlLike
-                            className="font-bold rounded-full cursor-pointer"
-                            onClick={() => handleLikeQuiz(quiz._id, index)}
-                          />
-                        </div>
-                        <span>{quiz.totalLikes}</span>
-                      </div>
-
-                      <div className="flex gap-2 items-center">
-                        <div className="border border-dark rounded-full w-6 h-6 p-1 flex place-content-center">
-                          <GoComment
-                            className="font-bold rounded-full cursor-pointer"
-                            onClick={() =>
-                              setShowComments({
-                                quizId: quiz._id,
-                                isShow: true,
-                              })
-                            }
-                          />
-                        </div>
-                        <span>{quiz.totalComments}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <p className="bg-dark text-light border-1 border-light px-6 py-2 rounded-full">
-                        {quiz.category}
-                      </p>
-                      <p className="bg-light text-dark border-dark border px-10 py-2 rounded-full cursor-pointer">
-                        Play
-                      </p>
+                    </h3>
+                    <div className="flex items-center justify-center gap-1 text-dark font-bold">
+                      <span className="text-dark font-secondary">
+                        {quiz.totalLikes}
+                      </span>
+                      <LuHeart className="w-5 h-5" />
                     </div>
                   </div>
+                  <p className="text-sm font-light text-dark-2">
+                    {quiz.description.substring(0, 25)}....
+                  </p>
                 </div>
               </div>
             ))}

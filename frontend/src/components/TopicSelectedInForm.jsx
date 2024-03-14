@@ -3,6 +3,7 @@ import { topics } from "../data";
 export default function TopicSelectedInForm({
   topicSelected,
   setTopicSelected,
+  prevTopic,
 }) {
   const [enterTopic, setEnterTopic] = useState(false);
 
@@ -17,7 +18,6 @@ export default function TopicSelectedInForm({
   }
 
   function handleBlurInput(e) {
-    console.log(e.target.value.length);
     if (e.target.value.length === 0) {
       setEnterTopic(false);
     } else {
