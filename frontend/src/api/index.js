@@ -113,7 +113,7 @@ export async function getNumberOfQuestion(token, id) {
 
 export async function getQuizzesByTopic(topicName){
   const response = await fetch(
-    "http://localhost:5000/api/v1/quiz/search/" + topicName
+    API_URL + "/quiz/search/" + topicName
   );
 
   const resData = await response.json();
@@ -128,7 +128,7 @@ export async function getQuizzesByTopic(topicName){
 
 export async function getTheThenPopularQuiz() {
     const response = await fetch(
-      "http://localhost:5000/api/v1/quiz/popularQuiz"
+      API_URL + "/quiz/popularQuiz"
     );
 
     const resData = await response.json();
@@ -139,7 +139,7 @@ export async function getTheThenPopularQuiz() {
 
 
 export async function getMyQuizzesInDashboard(token){
-  const response = await fetch("http://localhost:5000/api/v1/user/quizzes", {
+  const response = await fetch(API_URL + "/user/quizzes", {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -158,7 +158,7 @@ export async function getMyQuizzesInDashboard(token){
 
 export async function likeOrDislikeQuiz(token, quizId) {
   const response = await fetch(
-    "http://localhost:5000/api/v1/user/like-quiz",
+    API_URL + "/user/like-quiz",
     {
       method: "POST",
       body: JSON.stringify({ quizId }),
@@ -177,7 +177,7 @@ export async function likeOrDislikeQuiz(token, quizId) {
 
 
 export async function getSingleQuizToPlay(id){
-  const response = await fetch(`http://localhost:5000/api/v1/quiz/${id}`);
+  const response = await fetch(`${API_URL}/quiz/${id}`);
   const quizData = await response.json();
 
   if (!response.ok) {
