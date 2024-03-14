@@ -33,6 +33,10 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
+app.get('/', (req, res) => {
+  res.send('Is Working')
+})
+
 // middelware
 app.use(express.static('public'))
 app.use(cors());
