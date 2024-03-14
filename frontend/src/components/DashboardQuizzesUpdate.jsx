@@ -4,6 +4,9 @@ import ImageSelectedInForm from "./ImageSelectedInForm";
 import TopicSelectedInForm from "./TopicSelectedInForm";
 import { useParams } from "react-router-dom";
 import { UserContext } from "../store/user-context";
+import { getSingleQuizToDashboard, putHandleUpdateQuiz } from "../api";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function DashboardQuizzesUpdate() {
   const { quizId } = useParams();
@@ -19,16 +22,7 @@ export default function DashboardQuizzesUpdate() {
   const [isSuccess, setIsSuccess] = useState("");
 
   async function getSingleQuiz() {
-    const response = await fetch(
-      `http://localhost:5000/api/v1/quiz/update/${quizId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const quizData = await response.json();
+    const quizData = await getSingleQuizToDashboard(quizId, token);
 
     // TODO : Handle the response failed here
     setTitle(quizData.data.quiz.title);
@@ -60,26 +54,8 @@ export default function DashboardQuizzesUpdate() {
         publicQuiz: isPublic,
         numQuestion,
       };
-      const formData = new FormData();
-      for (const key in quizUpdated) {
-        formData.append(key, quizUpdated[key]);
-      }
 
-      const response = await fetch(
-        `http://localhost:5000/api/v1/user/update-quiz/${quizId}`,
-        {
-          method: "PUT",
-          body: formData,
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      const resMessage = await response.json();
-      if (!response.ok) {
-        throw new Error("");
-      }
+      await putHandleUpdateQuiz(quizUpdated, quizId, token);
       setLoading(false);
       setIsSuccess("Your quiz is successfully updated");
     } catch (err) {
@@ -122,7 +98,7 @@ export default function DashboardQuizzesUpdate() {
             <div>
               <ImageSelectedInForm
                 setFile={setFile}
-                prevImage={`http://localhost:5000/${file}`}
+                prevImage={`${BASE_URL}/${file}`}
               />
               <div className="flex-1">
                 <label

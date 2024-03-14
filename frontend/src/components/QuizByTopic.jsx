@@ -5,6 +5,8 @@ import { quizPopular } from "../data";
 import Loading from "./Loading";
 import { getQuizzesByTopic } from "../api";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 export default function QuizByTopic({ topic }) {
   const [dataQuizByTopic, setDataQuizByTopic] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -48,7 +50,7 @@ export default function QuizByTopic({ topic }) {
               className="flex gap-3 min-w-full border-dark-3 border px-2 py-4 rounded-lg"
             >
               <img
-                src={`http://localhost:5000/${quiz.backImage}`}
+                src={`${BASE_URL}/${quiz.backImage}`}
                 alt={quiz.title}
                 className="w-[200px] h-[150px] bg-cover rounded-md object-cover"
               />

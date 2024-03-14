@@ -3,6 +3,9 @@ import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../store/user-context";
 import NavbarNotAuth from "./NavbarNotAuth";
 import { MdKeyboardArrowDown } from "react-icons/md";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 export default function Header({ inCreateQuiz }) {
   const { user, handleLogout } = useContext(UserContext);
   const [dropOpen, setDropOpen] = useState(false);
@@ -35,7 +38,7 @@ export default function Header({ inCreateQuiz }) {
               >
                 <img
                   className="border-dark w-10 h-10 border-1 border rounded-full"
-                  src={`http://localhost:5000/avatars/${user.avatar}.png`}
+                  src={`${BASE_URL}/avatars/${user.avatar}.png`}
                   alt=""
                 />
                 <MdKeyboardArrowDown className=" w-6 h-6" />

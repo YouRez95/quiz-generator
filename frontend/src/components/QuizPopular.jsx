@@ -7,6 +7,8 @@ import SubTitleQuiz from "./SubTitleQuiz";
 import Loading from "./Loading";
 import { getTheThenPopularQuiz } from "../api";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 export default function QuizPopular() {
   const widthRef = useRef();
   const [popularQuiz, setPopularQuiz] = useState([]);
@@ -64,44 +66,11 @@ export default function QuizPopular() {
             ref={widthRef}
           >
             {popularQuiz.map((quiz) => (
-              // <div
-              //   key={quiz._id}
-              //   className="min-w-[270px] rounded-lg border border-dark-3 p-3 flex flex-col justify-between"
-              // >
-              //   <img
-              //     src={"http://localhost:5000/" + quiz.backImage}
-              //     alt={quiz.title}
-              //     className="bg-cover bg-center rounded-md h-[150px]"
-              //   />
-
-              //   <h3 className="font-secondary font-semibold uppercase text-dark">
-              //     {quiz.title}
-              //   </h3>
-              //   <p className=" font-extralight text-dark-2">
-              //     {quiz.description.substring(0, 50)}...
-              //   </p>
-              //   <div className="flex justify-between items-center h-[3vh] border border-dark-3">
-              //     <div className="flex h-full">
-              //       <div className="flex items-center px-2 gap-2 border-r border-dark-3">
-              //         <BiLike />
-              //         <p className="text-dark">{quiz.totalLikes}</p>
-              //       </div>
-              //       <div className="flex items-center px-2 gap-2 border-r border-dark-3">
-              //         <p className="text-dark">{quiz.totalComments}</p>
-              //         <GoComment />
-              //       </div>
-              //     </div>
-              //     <div className="px-2 h-full flex items-center gap-2 border-l border-dark-3">
-              //       <IoGameControllerOutline />
-              //       <p className="text-dark">play quiz</p>
-              //     </div>
-              //   </div>
-              // </div>
               <div key={quiz._id} className="cursor-pointer group grid gap-2">
                 <div className="w-[250px] h-[200px] relative bg-dark-3 overflow-hidden rounded-lg">
                   <img
                     className="object-cover w-full h-full object-center"
-                    src={"http://localhost:5000/" + quiz.backImage}
+                    src={BASE_URL + "/" + quiz.backImage}
                     alt={quiz.title}
                   />
                   <div className="absolute bg-dark opacity-70 top-0 hidden bottom-0 w-full transition-all duration-300 group-hover:block" />

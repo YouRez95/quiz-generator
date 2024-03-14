@@ -3,6 +3,7 @@ import { UserContext } from "../store/user-context";
 import Loading from "./Loading";
 import AvatarRegister from "./AvatarRegister";
 import { useNavigate } from "react-router-dom";
+import { putUpdateUserData } from "../api";
 
 export default function DashboardSetting() {
   const { user, token, handleUpdateUserInfo } = useContext(UserContext);
@@ -19,17 +20,7 @@ export default function DashboardSetting() {
 
   async function handleSubmitUpdateUserData(e) {
     e.preventDefault();
-
-    const response = await fetch("http://localhost:5000/api/v1/user/profile", {
-      method: "PUT",
-      body: JSON.stringify(updateUserData),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `bearer ${token}`,
-      },
-    });
-
-    const resData = await response.json();
+    const resData = await putUpdateUserData(updateUserData, token);
     handleUpdateUserInfo(resData.user);
     navigate("/profile");
   }

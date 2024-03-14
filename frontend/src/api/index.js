@@ -186,3 +186,123 @@ export async function getSingleQuizToPlay(id){
 
   return quizData
 }
+
+
+export async function getCommentsForQuiz(quizId, token){
+  const response = await fetch(
+    `${API_URL}/user/comment-quiz/${quizId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const resData = await response.json();
+
+  return resData;
+}
+
+export async function postCreateComments(quizId, text, token){
+  const response = await fetch(
+    `${API_URL}/user/comment-quiz`,
+    {
+      method: "POST",
+      body: JSON.stringify({ quizId: quizId, text: text }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const resData = await response.json();
+
+  return resData;
+}
+
+
+export async function getTheDraftQuiz(token){
+  const response = await fetch(`${API_URL}/user/draft`, {
+    headers: {
+      Authorization: `bearer ${token}`,
+    },
+  });
+
+  const resData = await response.json();
+  if (!response.ok) {
+    throw Error(resData.message);
+  }
+  return resData;
+}
+
+
+export async function getSingleQuizToDashboard(quizId, token){
+  const response = await fetch(
+    `${API_URL}/quiz/update/${quizId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const quizData = await response.json();
+
+  return quizData;
+}
+
+
+export async function putHandleUpdateQuiz(quizUpdated, quizId, token){
+  const formData = new FormData();
+  for (const key in quizUpdated) {
+    formData.append(key, quizUpdated[key]);
+  }
+  const response = await fetch(`${API_URL}/user/update-quiz/${quizId}`,
+    {
+      method: "PUT",
+      body: formData,
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  if (!response.ok) {
+    throw new Error("");
+  }
+
+  const resMessage = await response.json();
+}
+
+
+export async function putUpdateUserData(updateUserData, token) {
+  const response = await fetch(API_URL + "/user/profile", {
+      method: "PUT",
+      body: JSON.stringify(updateUserData),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `bearer ${token}`,
+      },
+    });
+
+    const resData = await response.json();
+    return resData;
+}
+
+
+export async function postTheScore(quizId, score, token){
+  const response = await fetch(
+    `${API_URL}/user/score-quiz/${quizId}`,
+    {
+      method: "POST",
+      body: JSON.stringify({ score }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+
+  const resData = await response.json();
+}

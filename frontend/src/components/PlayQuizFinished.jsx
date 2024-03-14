@@ -1,6 +1,7 @@
 import { useContext, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserContext } from "../store/user-context";
+import { postTheScore } from "../api";
 
 export default function PlayQuizFinished({
   quizId,
@@ -14,21 +15,7 @@ export default function PlayQuizFinished({
 
   async function sendTheScore() {
     const score = `${results.correct} / ${numQuestion}`;
-
-    const response = await fetch(
-      `http://localhost:5000/api/v1/user/score-quiz/${quizId}`,
-      {
-        method: "POST",
-        body: JSON.stringify({ score }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const resData = await response.json();
-    console.log(resData);
+    await postTheScore(quizId, score, token);
   }
 
   useEffect(() => {

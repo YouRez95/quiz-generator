@@ -1,6 +1,9 @@
 import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../store/user-context";
 import Loading from "./Loading";
+import { getTheDraftQuiz } from "../api";
+
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function DashboardDraft() {
   const { token } = useContext(UserContext);
@@ -11,26 +14,13 @@ export default function DashboardDraft() {
   async function handlequizzesDraft() {
     try {
       setIsLoading(true);
-      const response = await fetch("http://localhost:5000/api/v1/user/draft", {
-        headers: {
-          Authorization: `bearer ${token}`,
-        },
-      });
-
-      const resData = await response.json();
-      console.log(resData);
-
-      if (!response.ok) {
-        throw Error(resData.message);
-      }
+      const resData = await getTheDraftQuiz(token);
       setDataDraft(resData.data);
       setIsLoading(false);
     } catch (err) {
       setIsError(err.message);
       setIsLoading(false);
     }
-
-    console.log(dataDraft);
   }
 
   useEffect(() => {
@@ -64,7 +54,7 @@ export default function DashboardDraft() {
                 <div className="max-w-[180px] min-w-[90px] overflow-hidden rounded-lg">
                   <img
                     className="w-full h-full object-cover"
-                    src={`http://localhost:5000/${quiz.backImage}`}
+                    src={`${BASE_URL}/${quiz.backImage}`}
                     alt={quiz.title}
                   />
                 </div>

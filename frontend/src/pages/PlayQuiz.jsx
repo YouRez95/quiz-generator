@@ -7,6 +7,8 @@ import PlayQuizFirstEntry from "../components/PlayQuizFirstEntry";
 import PlayQuizFinished from "../components/PlayQuizFinished";
 import { getSingleQuizToPlay } from "../api";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 export default function PlayQuiz() {
   const { id } = useParams();
   const [gameStarted, setGameStarted] = useState(false);
@@ -118,7 +120,7 @@ export default function PlayQuiz() {
           <div className="absolute w-[50%] h-[100%] left-0 bottom-0">
             <img
               className="object-cover w-full h-full"
-              src={`http://localhost:5000/${quizInfo.backImage}`}
+              src={`${BASE_URL}/${quizInfo.backImage}`}
               alt={quizInfo.title}
             />
             <div

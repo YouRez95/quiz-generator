@@ -6,6 +6,8 @@ import Loading from "./Loading";
 import { getMyQuizzesInDashboard } from "../api";
 import { Link } from "react-router-dom";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 export default function DashboardQuizzes() {
   const { token } = useContext(UserContext);
   const [quizzes, setQuizzes] = useState([]);
@@ -48,7 +50,7 @@ export default function DashboardQuizzes() {
             >
               <div className="w-full h-[200px] overflow-hidden rounded-lg relative">
                 <img
-                  src={`http://localhost:5000/${quiz.backImage}`}
+                  src={`${BASE_URL}/${quiz.backImage}`}
                   alt=""
                   className="object-cover w-full h-full"
                 />
@@ -91,72 +93,4 @@ export default function DashboardQuizzes() {
       )}
     </>
   );
-}
-// backImage
-// :
-// "quizBackground/2024-03-02T15:55:02.237Z-mathsquiz.jpeg"
-// category
-// :
-// ['Mathematics']
-// createdAt
-// :
-// "2024-03-02T15:55:02.239Z"
-// description
-// :
-// "description created by youness 🏁🏁"
-// isComplete
-// :
-// true
-// numQuestion
-// :
-// 3
-// publicQuiz
-// :
-// true
-// title
-// :
-// "Quiz maths created by youness 😍"
-// totalComments
-// :
-// 9
-// totalLikes
-// :
-// 10
-// updatedAt
-// :
-// "2024-03-02T15:55:50.312Z"
-// userId
-// :
-// "65e34b2df560473b20f87e24"
-// __v
-// :
-// 0
-// _id
-// :
-// ("65e34bd6f560473b20f87e2d");
-
-{
-  /* <div className="relative z-10 flex justify-end m-3">
-              <div className="relative flex justify-center items-center">
-                <GoHeart className="text-dark w-10 h-10 p-1 rounded-full" />
-                <span className="absolute top-[55%] translate-y-[-50%] text-dark-2 left-[40%] text-sm">
-                  5
-                </span>
-              </div>
-            </div>
-            <img
-              className="absolute w-full h-full top-0 bottom-0 right-0 left-0 bg-cover"
-              src={`http://localhost:5000/${quiz.backImage}`}
-              alt={quiz.title}
-            />
-            <div className="relative flex flex-col h-full justify-end">
-              <div className="bg-dark w-full h-[100px] flex flex-col gap-3 p-4 text-light rounded-t-2xl">
-                <h3 className="font-secondary font-medium text-lg">
-                  {quiz.title}
-                </h3>
-                <p className="text-sm font-extralight">
-                  {quiz.description.substring(0, 70)}
-                </p>
-              </div>
-            </div> */
 }

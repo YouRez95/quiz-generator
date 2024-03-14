@@ -16,6 +16,8 @@ import { UserContext } from "../store/user-context";
 import Comments from "../components/Comments";
 import { Link } from "react-router-dom";
 
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 const categories = [
   {
     id: "7",
@@ -122,7 +124,7 @@ export default function HomeAuth() {
                 <div className="relative w-[250px] h-[200px] bg-dark-3 overflow-hidden rounded-lg">
                   <img
                     className="object-cover absolute w-full h-full"
-                    src={`http://localhost:5000/${quiz.backImage}`}
+                    src={`${BASE_URL}/${quiz.backImage}`}
                     alt={quiz.title}
                   />
                   <div className="bg-dark w-full h-full absolute opacity-0 group-hover:opacity-50 transition-all" />

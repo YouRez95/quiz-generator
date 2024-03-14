@@ -3,33 +3,9 @@ import { avatars } from "../data";
 import { UserContext } from "../store/user-context";
 import Loading from "./Loading";
 import { LuSend } from "react-icons/lu";
+import { getCommentsForQuiz, postCreateComments } from "../api";
 
-const DUMMY_COMMENTS = [
-  {
-    picture: avatars[0].image,
-    name: "alex",
-    text: "this is a great quiz",
-    date: "20-12-2022",
-  },
-  {
-    picture: avatars[1].image,
-    name: "rayan",
-    text: "this is bad quiz",
-    date: "20-12-2022",
-  },
-  {
-    picture: avatars[2].image,
-    name: "youness",
-    text: "You have some wrong answers",
-    date: "20-12-2022",
-  },
-  {
-    picture: avatars[3].image,
-    name: "Aymen",
-    text: "nice quiz",
-    date: "20-12-2022",
-  },
-];
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Comments({ showComments, setShowComments }) {
   const { user, loadingUser, token } = useContext(UserContext);
@@ -37,33 +13,16 @@ export default function Comments({ showComments, setShowComments }) {
   const [textInput, setTextInput] = useState("");
 
   async function getComments() {
-    const response = await fetch(
-      `http://localhost:5000/api/v1/user/comment-quiz/${showComments.quizId}`,
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
-    const resData = await response.json();
+    const resData = await getCommentsForQuiz(showComments.quizId, token);
     setCommentsData(resData.data);
   }
 
   async function createComments() {
-    const response = await fetch(
-      `http://localhost:5000/api/v1/user/comment-quiz`,
-      {
-        method: "POST",
-        body: JSON.stringify({ quizId: showComments.quizId, text: textInput }),
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      }
+    const resData = await postCreateComments(
+      showComments.quizId,
+      textInput,
+      token
     );
-
-    const resData = await response.json();
     const newComment = {
       _id: Math.random() * 1000,
       userId: user,
@@ -114,7 +73,7 @@ export default function Comments({ showComments, setShowComments }) {
                 >
                   <div className="w-[50px] h-[50px]">
                     <img
-                      src={`http://localhost:5000/avatars/${comment.userId.avatar}.png`}
+                      src={`${BASE_URL}/avatars/${comment.userId.avatar}.png`}
                       alt={comment.userId.avatar}
                     />
                   </div>
@@ -136,10 +95,7 @@ export default function Comments({ showComments, setShowComments }) {
 
         <div className="flex gap-3 border bg-light w-full right-0 left-0 border-dark-3 items-center p-3 sticky bottom-0 overflow-y-hidden">
           <div className="w-[50px] h-[50px]">
-            <img
-              src={`http://localhost:5000/avatars/${user.avatar}.png`}
-              alt=""
-            />
+            <img src={`${BASE_URL}/avatars/${user.avatar}.png`} alt="" />
           </div>
           <input
             value={textInput}
