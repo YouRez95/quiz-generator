@@ -3,14 +3,13 @@ import dotenv from "dotenv";
 dotenv.config()
 import cors from 'cors'
 import express from "express";
-import mongoose from "mongoose";
 import multer from 'multer'
 import http from 'http';
-import {Server} from 'socket.io'
 import connectToDb from "./db/connection.js";
 import userRoutes from "./routes/userRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
-import { init } from "./socket.js";
+import { addNewUser, getUser, init, removeUser } from "./utils/socket.js";
+
 // Create the server
 const app = express();
 
@@ -33,8 +32,9 @@ const fileFilter = (req, file, cb) => {
   }
 }
 
+// Testing Route
 app.get('/', (req, res) => {
-  res.send('Is Working')
+  res.send('Welcome...')
 })
 
 // middelware
@@ -43,10 +43,10 @@ app.use(cors());
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(multer({storage: fileStorage, fileFilter}).single('backImage'))
+
+
 // Routes
-
 app.use('/api/v1/user', userRoutes)
-
 app.use('/api/v1/quiz', quizRoutes)
 
 
@@ -55,9 +55,42 @@ app.use('/api/v1/quiz', quizRoutes)
 const server = http.createServer(app)
 const io = init(server);
 
-io.on('connect', (socket) => {
-  console.log('Client connected');
-})
+io.on("connection", (socket) => {
+  socket.on("newUser", (data) => {
+    addNewUser(data, socket.id)
+  });
+
+  socket.on('sendLikeQuiz', data => {
+    if (data.receivedUserId !== data.senderUserId) {
+      const receivedUser = getUser(data.receivedUserId)
+      const senderUser = getUser(data.senderUserId)
+      if (receivedUser?.socketId) {
+        socket.to(receivedUser.socketId).emit('receiveLikePost', {id: senderUser.userId, username: senderUser.username, quizName: data.quizName, userAvatar: data.userAvatar, action: data.action})
+      }
+    }
+  })
+
+  socket.on('sendCommentQuiz', data => {
+    if (data.senderUserId !== data.receivedUserId) {
+      const receivedUser = getUser(data.receivedUserId)
+      const senderUser = getUser(data.senderUserId)
+      if (receivedUser?.socketId) {
+        socket.to(receivedUser.socketId).emit('receiveCommentsPost', {
+          userAvatar :data.userAvatar,
+          quizName: data.quizName,
+          action: data.action,
+          text: data.textInput,
+          username: senderUser.username
+        })
+      }
+    }
+  })
+
+
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+  });
+});
 
 
 // Run the server

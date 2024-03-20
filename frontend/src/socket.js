@@ -1,6 +1,18 @@
 import { io } from 'socket.io-client';
 
-// "undefined" means the URL will be computed from the `window.location` object
-const URL = process.env.NODE_ENV === 'production' ? undefined : 'http://localhost:5000';
+const URL = import.meta.env.VITE_BASE_URL
+export default function socketConnection () {
+  // const userData = localStorage.getItem("user")
+  //     ? JSON.parse(localStorage.getItem("user"))
+  //     : null;
 
-export const socket = io(URL);
+  // let userId;
+  // if (userData){
+  //   userId = userData.user._id
+  // } else {
+  //   userId = null
+  // }
+
+  const socket = io(URL);
+  return socket;
+}

@@ -1,14 +1,53 @@
-import { Link, Outlet, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import { Link, Outlet } from "react-router-dom";
+import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../store/user-context";
 import NavbarNotAuth from "./NavbarNotAuth";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import socketConnection from "../socket";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Header({ inCreateQuiz }) {
-  const { user, handleLogout } = useContext(UserContext);
+  const { user, handleLogout, socketState, setNotifications, notifications } =
+    useContext(UserContext);
   const [dropOpen, setDropOpen] = useState(false);
+  const menuRef = useRef();
+  const linksRef = useRef();
+
+  const handleOutsideClick = (event) => {
+    if (linksRef.current && linksRef.current.contains(event.target)) {
+      setTimeout(() => {
+        setDropOpen(false);
+      }, 1000);
+    }
+
+    if (
+      menuRef.current &&
+      !menuRef.current.contains(event.target) &&
+      linksRef.current &&
+      !linksRef.current.contains(event.target)
+    ) {
+      setDropOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => {
+      document.removeEventListener("mousedown", handleOutsideClick);
+    };
+  }, []);
+
+  useEffect(() => {
+    socketState?.on("receiveLikePost", (data) => {
+      setNotifications((prev) => [...prev, data]);
+    });
+
+    socketState?.on("receiveCommentsPost", (data) => {
+      console.log(data);
+      setNotifications((prev) => [...prev, data]);
+    });
+  }, [socketState]);
 
   return (
     <>
@@ -33,9 +72,15 @@ export default function Header({ inCreateQuiz }) {
               )}
 
               <div
-                className="cursor-pointer flex items-center"
+                className="cursor-pointer flex items-center relative"
                 onClick={() => setDropOpen((prev) => !prev)}
+                ref={menuRef}
               >
+                {notifications.length > 0 && (
+                  <div className="absolute top-0 right-[30%] bg-dark size-5 rounded-full text-light flex justify-center items-center font-secondary font-bold">
+                    {notifications.length}
+                  </div>
+                )}
                 <img
                   className="border-dark w-10 h-10 border-1 border rounded-full"
                   src={`${BASE_URL}/avatars/${user.avatar}.png`}
@@ -47,19 +92,30 @@ export default function Header({ inCreateQuiz }) {
 
             {dropOpen && (
               <div className="absolute bg-dark text-light top-[70px] transition-all right-0 w-[200px] p-3 rounded-lg">
-                <ul className="flex flex-col items-center w-full">
-                  <li className="w-full hover:bg-dark-2 rounded-md">
+                <ul className="flex flex-col w-full" ref={linksRef}>
+                  <li className="w-full rounded-md">
                     <Link
                       to="/profile"
-                      className="block w-full py-2  text-center"
+                      className="block w-full py-2 px-2 rounded-md hover:bg-dark-2"
                     >
                       Profile
                     </Link>
                   </li>
 
-                  <li className="w-full hover:bg-dark-2 rounded-md">
+                  {notifications.length > 0 && (
+                    <li className="w-full rounded-md">
+                      <Link
+                        to="/profile/notifications"
+                        className="block w-full py-2 px-2 rounded-md hover:bg-dark-2"
+                      >
+                        Notifications ({notifications.length})
+                      </Link>
+                    </li>
+                  )}
+
+                  <li className="w-full">
                     <p
-                      className="block w-full py-2  text-center cursor-pointer"
+                      className="block w-full py-2 px-2 rounded-md hover:bg-dark-2"
                       onClick={handleLogout}
                     >
                       Logout

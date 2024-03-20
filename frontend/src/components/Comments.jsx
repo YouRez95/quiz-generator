@@ -8,7 +8,8 @@ import { getCommentsForQuiz, postCreateComments } from "../api";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Comments({ showComments, setShowComments }) {
-  const { user, loadingUser, token } = useContext(UserContext);
+  const { user, loadingUser, token, setNotifications, socketState } =
+    useContext(UserContext);
   const [commentsData, setCommentsData] = useState([]);
   const [textInput, setTextInput] = useState("");
 
@@ -29,6 +30,15 @@ export default function Comments({ showComments, setShowComments }) {
       text: textInput,
       createdAt: new Date().toISOString().substring(0, 19),
     };
+
+    socketState.emit("sendCommentQuiz", {
+      senderUserId: user._id,
+      userAvatar: user.avatar,
+      receivedUserId: showComments.creator,
+      quizName: showComments.quizTitle,
+      action: "Comment",
+      textInput,
+    });
     setCommentsData((prev) => [newComment, ...prev]);
     setTextInput("");
   }

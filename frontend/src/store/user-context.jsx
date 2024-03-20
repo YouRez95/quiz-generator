@@ -6,6 +6,8 @@ export function UserContextProvider({ children }) {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
   const [loadingUser, setLoadingUser] = useState(false);
+  const [socketState, setSocketState] = useState(null);
+  const [notifications, setNotifications] = useState([]);
 
   // TODO: check the exipre time for token if is expired setUser(null) and setToken(null)
 
@@ -37,6 +39,10 @@ export function UserContextProvider({ children }) {
     token,
     handleUpdateUserInfo,
     loadingUser,
+    setSocketState,
+    socketState,
+    setNotifications,
+    notifications,
   };
   return (
     <UserContext.Provider value={userValues}>{children}</UserContext.Provider>

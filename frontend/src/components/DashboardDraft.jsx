@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { UserContext } from "../store/user-context";
 import Loading from "./Loading";
 import { getTheDraftQuiz } from "../api";
+import { Link } from "react-router-dom";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
@@ -32,14 +33,7 @@ export default function DashboardDraft() {
   if (!token) return <Loading />;
 
   return (
-    <div className="pt-20 grid gap-10">
-      <h1 className="text-dark font-secondary text-3xl font-bold">
-        Draft
-        <span className="text-sm px-2 bg-dark-2 rounded-full font-thin text-light">
-          Quiz not completed yet
-        </span>
-      </h1>
-
+    <>
       {isLoading && <Loading />}
       {!isLoading && dataDraft.length === 0 && <div>No Draft Found ... </div>}
 
@@ -73,9 +67,12 @@ export default function DashboardDraft() {
                       You've successfully created {quiz.totalQuestionFounded}{" "}
                       out of {quiz.numQuestion} questions for your quiz.
                     </p>
-                    <button className="bg-light text-dark px-3 py-1 rounded-full">
+                    <Link
+                      to={quiz._id}
+                      className="bg-light text-dark px-3 py-1 rounded-full"
+                    >
                       Continue
-                    </button>
+                    </Link>
                   </div>
                 </div>
               </li>
@@ -83,6 +80,6 @@ export default function DashboardDraft() {
           </ul>
         </div>
       )}
-    </div>
+    </>
   );
 }

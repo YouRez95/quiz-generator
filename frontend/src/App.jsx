@@ -14,6 +14,8 @@ import DashboardDraft from "./components/DashboardDraft";
 import PlayQuiz from "./pages/PlayQuiz";
 import DashboardQuizzesRoot from "./components/DashboardQuizzesRoot";
 import DashboardQuizzesUpdate from "./components/DashboardQuizzesUpdate";
+import DashboardQuizzesUpdateQuestions from "./components/DashboardQuizzesUpdateQuestions";
+import DashboardDraftRoot from "./components/DashboardDraftRoot";
 
 const router = createBrowserRouter([
   {
@@ -42,9 +44,23 @@ const router = createBrowserRouter([
             children: [
               { index: true, element: <DashboardQuizzes /> },
               { path: "update/:quizId", element: <DashboardQuizzesUpdate /> },
+              {
+                path: "update/:quizId/questions",
+                element: <DashboardQuizzesUpdateQuestions draft={false} />,
+              },
             ],
           },
-          { path: "draft", element: <DashboardDraft /> },
+          {
+            path: "draft",
+            element: <DashboardDraftRoot />,
+            children: [
+              { index: true, element: <DashboardDraft /> },
+              {
+                path: ":quizId",
+                element: <DashboardQuizzesUpdateQuestions draft={true} />,
+              },
+            ],
+          },
           { path: "notifications", element: <DashboardNotifications /> },
           { path: "settings", element: <DashboardSetting /> },
         ],

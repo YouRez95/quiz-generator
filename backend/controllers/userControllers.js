@@ -8,10 +8,12 @@ import LikeModel from '../models/likes.js';
 import Comment from '../models/comments.js';
 import { isValidId } from './quizControllers.js';
 import Score from '../models/scoreUser.js';
+import fs from 'fs';
+import path from 'path';
 
 
-// /api/v1/user/signup
-async function postUserSignup(req, res){
+// POST -> /api/v1/user/signup
+export async function postUserSignup(req, res){
   const result = validationResult(req)
   if (!result.isEmpty()) {
     return res.status(400).json({errors: result.array()});
@@ -30,11 +32,11 @@ async function postUserSignup(req, res){
     return res.status(500).json({errors: 'An error occured try again later'})
   }
 
-  res.status(200).json({message: 'user created successfully'})
+  res.status(201).json({message: 'user created successfully'})
 }
 
-// /api/v1/user/login
-async function postUserLogin(req, res) {
+// POST -> /api/v1/user/login
+export async function postUserLogin(req, res) {
   const result = validationResult(req);
 
   if (!result.isEmpty()) {
@@ -54,43 +56,13 @@ async function postUserLogin(req, res) {
   }
   const token = jwt.sign({id: user._id}, process.env.JWT_SECRET, {expiresIn: '1d'});
   const {password, ...rest} = user._doc
-  console.log(rest)
   res.status(200).json({message: "login success", data: {user: rest, token: token }})
 }
 
-// GET -> /api/v1/user/quizzes
-async function getMyQuizzes(req, res) {
-  try {
-    const userId = req.userId;
-    const quizzes = await Quiz.find({userId, isComplete: true})
-    res.status(200).json({message: "success", data: quizzes})
-  } catch(err) {
-    console.log(err)
-    res.status(500).json({message: 'Something Wrong Try Again Later'})
-  }
-}
 
-// GET -> /api/v1/user/draft
-async function getMyQuizzesDraft(req, res) {
-  try {
-    const userId = req.userId;
-    const quizzes = await Quiz.find({userId, isComplete: false}).select('-userId -isComplete -totalLikes -totalComments -publicQuiz')
-
-    const quizzesToSend = []
-    for (const quiz of quizzes) {
-      const questionFounded = await Question.countDocuments({quizId: quiz._id})
-      quizzesToSend.push({...quiz._doc, totalQuestionFounded: questionFounded})
-    }
-
-    res.status(200).json({message: "success", data: quizzesToSend})
-  } catch(err) {
-    console.log(err)
-    res.status(500).json({message: 'Something Wrong Try Again Later'})
-  }
-}
 
 // POST -> /api/v1/user/profile
-async function changeUserProfile(req, res) {
+export async function changeUserProfile(req, res) {
   try {
     const {username, fullname, avatar} = req.body;
     const user = await User.findById(req.userId).select('-password -email')
@@ -108,7 +80,7 @@ async function changeUserProfile(req, res) {
     }
   
     const userUpdated = await user.save();
-    res.status(201).json({message: "success", user: userUpdated})
+    res.status(200).json({message: "success", user: userUpdated})
   } catch(err) {
     console.log(err);
     res.status(500).json({message: 'Something Wrong Try Again Later'})
@@ -117,7 +89,7 @@ async function changeUserProfile(req, res) {
 
 
 // POST -> /api/v1/user/like-quiz
-async function likeQuiz(req, res) {
+export async function likeQuiz(req, res) {
 
   try {
     const userId = req.userId;
@@ -140,12 +112,11 @@ async function likeQuiz(req, res) {
 }
 
 // POST -> /api/v1/user/comment-quiz
-async function postCommentQuiz(req, res) {
+export async function postCommentQuiz(req, res) {
   
   try {
     const userId = req.userId;
     const {quizId, text} = req.body;
-    console.log(req.body)
   
     if (!quizId || !text) {
       const error = new Error('comment required')
@@ -154,7 +125,7 @@ async function postCommentQuiz(req, res) {
     }
     const newComment = await Comment.create({userId, quizId, text});
     if (!newComment) {
-      const error = new Error('comment failed')
+      const error = new Error('comment failed to add')
       error.statusCode = 400
       throw error;
     }
@@ -170,7 +141,7 @@ async function postCommentQuiz(req, res) {
 
 
 // GET -> /api/v1/user/comment-quiz/:quizId
-async function getCommentQuiz(req, res) {
+export async function getCommentQuiz(req, res) {
   try {
     const {quizId} = req.params;
     if (!isValidId(quizId)) {
@@ -193,8 +164,7 @@ async function getCommentQuiz(req, res) {
 }
 
 // POST -> /api/v1/user/score-quiz/:quizId
-
-async function postTheScoreQuiz(req, res){
+export async function postTheScoreQuiz(req, res){
 
   try {
     const {quizId} = req.params;
@@ -218,18 +188,21 @@ async function postTheScoreQuiz(req, res){
 
 
 // PUT -> api/v1/user/update-quiz/:quizId
-async function updateQuiz(req, res){
+export async function updateQuiz(req, res){
 
   try {
     const {quizId} = req.params;
-    const {title, description, category, numQuestion, publicQuiz} = req.body;
-    console.log(req.body)
+    const {title, description, category, publicQuiz} = req.body;
   
-    // Check if the userId = quiz.userId
     const quiz = await Quiz.findById(quizId)
-    if (!(quiz && quiz.userId.toString() === req.userId.toString())) {
-      const error = new Error('Quiz Not Found');
-      error.statusCode = 400;
+    if (!quiz) {
+      const error = new Error('Quiz Not Found')
+      error.statusCode = 404;
+      throw error;
+    }
+    if (quiz.userId.toString() !== req.userId.toString()) {
+      const error = new Error('Unauthorized');
+      error.statusCode = 401;
       throw error;
     }
 
@@ -237,9 +210,15 @@ async function updateQuiz(req, res){
       const [,...rest] = req.file.path.split('/')
       const urlImage = rest.join('/')
       const backImage = urlImage
-      await Quiz.findByIdAndUpdate(quizId, {title, description, category, numQuestion, publicQuiz, backImage})
+      // if user add new image, the old image will be removed from file system
+      const __dirname = import.meta.dirname;
+      const pathToImage = path.join(__dirname, '..', 'public', quiz.backImage)
+      fs.unlink(pathToImage, (err)  => {
+        if (err) throw err;
+      })
+      await Quiz.findByIdAndUpdate(quizId, {title, description, category, publicQuiz, backImage})
     } else {
-      await Quiz.findByIdAndUpdate(quizId, {title, description, category, numQuestion, publicQuiz})
+      await Quiz.findByIdAndUpdate(quizId, {title, description, category, publicQuiz})
     }
     res.status(200).json({message: "success update"})    
   } catch (err) {
@@ -249,4 +228,76 @@ async function updateQuiz(req, res){
 }
 
 
-export {postUserSignup, postUserLogin, getMyQuizzes, changeUserProfile, getMyQuizzesDraft, likeQuiz, postCommentQuiz, getCommentQuiz, postTheScoreQuiz, updateQuiz};
+// GET -> api/v1/user/my-questions/:quizId
+export async function getMyQuestionsForSpecificQuiz(req, res){
+  try {
+    const userId = req.userId;
+    const quizId = req.params.quizId
+  
+    const quiz = await Quiz.findById(quizId);
+  
+    if (quiz.userId.toString() !== userId.toString()) {
+      const error = new Error('Unauthorized');
+      error.statusCode = 401
+      throw error;
+    }
+  
+    const questions = await Question.find({quizId});
+    res.status(200).json({message: "success", data: questions})
+  } catch(err){
+    res.status(err.statusCode || 500).json({message: err.message || "Something Wrong try again later"});
+  }
+  
+}
+
+// PUT -> api/v1/user/update-question/:quizId/:questionId
+export async function updateMyQuestion(req, res){
+  try {
+    const quizId = req.params.quizId;
+    const userId = req.userId;
+    const quiz = await Quiz.findById(quizId);
+    if (quiz.userId.toString() !== userId.toString()) {
+      const error = new Error('Unauthorized');
+      error.statusCode = 401;
+      throw error;
+    }
+    const questionId = req.params.questionId;
+    const {question, correctAnswer, answerOptions} = req.body;
+
+    if (answerOptions.includes(undefined) 
+      || answerOptions.includes('') 
+      || answerOptions.length < 0 
+      ||!question || !correctAnswer) {
+        const error = new Error('All Inputs and minimum one option are required');
+        error.statusCode = 400;
+        throw error;
+    }
+    const questionUpdated = await Question.findByIdAndUpdate(questionId, {question, correctAnswer, answerOptions}, {returnDocument: 'after'})
+    res.status(200).json({message: "question updated successfully"});
+
+  } catch (err) {
+    res.status(err.statusCode || 500).json({message: err.message || "Someyhing wrong try again later"})
+  }
+}
+
+// DELETE -> api/v1/user/delete-question/:quizId/:questionId
+export async function deleteQuestion(req, res){
+  try {
+    const quizId = req.params.quizId;
+    const userId = req.userId;
+    const quiz = await Quiz.findById(quizId);
+    if (quiz.userId.toString() !== userId.toString()) {
+      const error = new Error('Unauthorized');
+      error.statusCode = 401;
+      throw error;
+    }
+    const questionId = req.params.questionId;
+
+    await Question.findByIdAndDelete(questionId);
+    quiz.numQuestion -= 1;
+    await quiz.save();
+    res.status(200).json({message: "question deleted successfully"});
+  } catch (err) {
+    res.status(err.statusCode || 500).json({message: err.message || "Someyhing wrong try again later"})
+  } 
+}
