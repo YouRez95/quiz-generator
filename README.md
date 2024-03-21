@@ -63,7 +63,6 @@ Quiz Generator serves as a platform where users can unleash their creativity by 
    ii. .env on frontend :
 
    ```
-
    ## URL API : example: http://localhost:5000
 
    VITE_BASE_URL=URL API HERE
@@ -71,9 +70,4 @@ Quiz Generator serves as a platform where users can unleash their creativity by 
    ## URL API ENTRY : example: http://localhost:5000/api/v1
 
    VITE_API_URL=URL API HERE/api/v1
-
    ```
-
-```
-
-```
