@@ -27,7 +27,15 @@ Quiz Generator serves as a platform where users can unleash their creativity by 
 ## Installation
 
 1. **_Clone the Repository:_** Use the `git clone` command to clone the GitHub repository to your local machine
-   `git clone https://github.com/YouRez95/quiz-generator.git`
+   ```
+    git clone https://github.com/YouRez95/quiz-generator.git
+   ```
 2. **_Install depends:_**
-   `cd backend && npm install`
-   `cd frontend && npm install`
+
+   ```
+   cd backend && npm install
+   ```
+
+   ```
+   cd frontend && npm install
+   ```
