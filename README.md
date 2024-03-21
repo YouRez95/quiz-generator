@@ -42,30 +42,38 @@ Quiz Generator serves as a platform where users can unleash their creativity by 
 
 3. **_Setting up env variables:_**
 
-- .env on backend :
+   i. .env on backend :
+
+   ```
+   MONGO_URL=YOUR DATABASE URI MONGODB
+
+   ## JWT access token
+
+   JWT_SECRET=YOUR JWT ACCESS TOKEN SECRET
+
+   ## NODE ENV
+
+   NODE_ENV=NODE ENV HERE
+
+   ## FRONT URL
+
+   FRONT_URL=undefined
+   ```
+
+   ii. .env on frontend :
+
+   ```
+
+   ## URL API : example: http://localhost:5000
+
+   VITE_BASE_URL=URL API HERE
+
+   ## URL API ENTRY : example: http://localhost:5000/api/v1
+
+   VITE_API_URL=URL API HERE/api/v1
+
+   ```
 
 ```
-MONGO_URL=YOUR DATABASE URI MONGODB
 
-## JWT access token
-
-JWT_SECRET=YOUR JWT ACCESS TOKEN SECRET
-
-## NODE ENV
-
-NODE_ENV=NODE ENV HERE
-
-## FRONT URL
-
-FRONT_URL=undefined
-```
-
-- .env on frontend :
-
-```
-## URL API : example: http://localhost:5000
-VITE_BASE_URL=URL API HERE
-
-## URL API ENTRY : example: http://localhost:5000/api/v1
-VITE_API_URL=URL API HERE/api/v1
 ```
