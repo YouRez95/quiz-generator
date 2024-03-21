@@ -44,6 +44,7 @@ Quiz Generator serves as a platform where users can unleash their creativity by 
 
 - .env on backend :
 
+```
 MONGO_URL=YOUR DATABASE URI MONGODB
 
 ## JWT access token
@@ -57,6 +58,7 @@ NODE_ENV=NODE ENV HERE
 ## FRONT URL
 
 FRONT_URL=undefined
+```
 
 - .env on frontend :
 
