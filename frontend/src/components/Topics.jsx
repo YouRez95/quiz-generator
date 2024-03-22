@@ -5,10 +5,10 @@ import { topics } from "../data";
 
 export default function Topics({ topicSelected, onChangeTopic }) {
   return (
-    <div>
+    <div className="">
       <SubTitleQuiz title={"Search by Topic"} icon={IoIosSearch} />
 
-      <div className="flex flex-wrap gap-3">
+      <div className="flex flex-wrap gap-3 justify-center">
         {topics.map((topic) => {
           const IconTopic = topic.icon;
           return (
@@ -17,7 +17,7 @@ export default function Topics({ topicSelected, onChangeTopic }) {
                 onChangeTopic({ topic: topic.topic, icon: topic.icon })
               }
               key={topic.id}
-              className={`border relative border-1 text-dark overflow-hidden border-dark-3 group flex gap-2 items-center rounded-full px-3 py-2 ${
+              className={`border relative border-1 text-dark overflow-hidden border-dark-3 group flex gap-2 items-center rounded-full text-sm md:text-[16px] px-3 md:px-4 py-2 ${
                 topicSelected.topic === topic.topic && "bg-dark text-light"
               }`}
             >

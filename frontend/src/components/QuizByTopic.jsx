@@ -47,27 +47,27 @@ export default function QuizByTopic({ topic }) {
           {dataQuizByTopic.map((quiz) => (
             <div
               key={quiz._id}
-              className="flex gap-3 min-w-full border-dark-3 border px-2 py-4 rounded-lg"
+              className="flex flex-col items-stretch md:flex-row gap-3 h-fit min-w-full border-dark-3 border px-2 py-4 rounded-lg"
             >
               <img
                 src={`${BASE_URL}/${quiz.backImage}`}
                 alt={quiz.title}
-                className="w-[200px] h-[150px] bg-cover rounded-md object-cover"
+                className="w-full h-[150px] rounded-md flex-1 object-cover"
               />
-              <div className="flex flex-col w-full justify-between">
-                <div className="flex flex-col w-full">
-                  <h3 className="font-secondary text-xl font-semibold text-dark">
+              <div className="flex flex-col gap-5 w-full justify-between">
+                <div className="flex flex-col w-full gap-3">
+                  <h3 className="font-secondary text-[18px] xsm:text-xl font-semibold text-dark">
                     {quiz.title}
                   </h3>
-                  <p className=" font-extralight text-dark-2">
+                  <p className="text-[14px] xsm:text-base font-extralight text-dark-2">
                     {quiz.description.substring(0, 150)}...
                   </p>
                 </div>
-                <div className="flex items-center justify-between ">
-                  <p className=" text-dark-3 text-sm">
+                <div className="flex items-center justify-between flex-col xsm:flex-row">
+                  <p className=" text-dark-3 text-sm order-2 xsm:order-1">
                     {quiz.createdAt.substring(0, 10)}
                   </p>
-                  <div className="flex gap-4 items-center">
+                  <div className="flex gap-4 items-center order-1 xsm:order-2 mb-2 xsm:mb-0">
                     <p className="bg-dark-3 text-light rounded-full px-3 py-1 text-sm">
                       <span className="font-secondary">{quiz.category[0]}</span>
                     </p>

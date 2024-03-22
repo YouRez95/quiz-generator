@@ -3,6 +3,7 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { UserContext } from "../store/user-context";
 import NavbarNotAuth from "./NavbarNotAuth";
 import { MdKeyboardArrowDown } from "react-icons/md";
+import logo from "../assets/logo-single.png";
 import socketConnection from "../socket";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -56,10 +57,11 @@ export default function Header({ inCreateQuiz }) {
       {user && (
         <header className="border-b-2 border-dark bg-light sticky top-0 z-20">
           <div className="flex justify-between h-[70px] items-center layer relative">
-            <Link to="/" className="w-[30px] text-lg h-[30px]">
-              <p className="font-secondary text-center text-dark border-2 border-dark block font-extrabold">
+            <Link to="/" className="text-lg">
+              {/* <p className="font-secondary text-center text-dark border-2 border-dark block font-extrabold">
                 ?
-              </p>
+              </p> */}
+              <img src={logo} className="w-[55px]" alt="" />
             </Link>
 
             <div className="flex gap-6">

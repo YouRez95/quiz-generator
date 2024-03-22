@@ -25,6 +25,7 @@ export default function QuizPopular() {
   async function fetchThePopularQuestion() {
     setIsLoading(true);
     const resData = await getTheThenPopularQuiz();
+    console.log(resData);
     setPopularQuiz(resData.data);
     setIsLoading(false);
   }
@@ -48,26 +49,29 @@ export default function QuizPopular() {
       {!isLoading && popularQuiz.length > 0 && (
         <>
           <div
-            className="absolute bg-dark cursor-pointer w-10 h-10 -right-6 z-10 top-[50%] flex items-center justify-center translate-y-[-50%]"
+            className="hidden  md:flex absolute group hover:bg-dark border cursor-pointer w-10 h-10 right-6 z-10 top-[20px] items-center justify-center translate-y-[-50%]"
             onClick={handleScrollRight}
           >
-            <IoIosArrowDropright className="text-3xl text-light" />
+            <IoIosArrowDropright className="text-3xl group-hover:text-white text-dark" />
           </div>
 
           <div
-            className="absolute bg-dark cursor-pointer w-10 h-10 -left-6 z-10 top-[50%] flex items-center justify-center translate-y-[-50%]"
+            className="hidden md:flex border absolute group hover:bg-dark cursor-pointer w-10 h-10 right-[70px] z-10 top-[20px] items-center justify-center translate-y-[-50%]"
             onClick={handleScrollLeft}
           >
-            <IoIosArrowDropleft className="text-3xl text-light" />
+            <IoIosArrowDropleft className="text-3xl group-hover:text-white text-dark" />
           </div>
 
           <div
-            className="flex gap-10 overflow-x-scroll scroll-smooth scrollbar-hide"
+            className="flex gap-3 sm:gap-6 overflow-x-scroll scroll-smooth scrollbar-hide p-3 mr-2"
             ref={widthRef}
           >
             {popularQuiz.map((quiz) => (
-              <div key={quiz._id} className="cursor-pointer group grid gap-2">
-                <div className="w-[250px] h-[200px] relative bg-dark-3 overflow-hidden rounded-lg">
+              <div
+                key={quiz._id}
+                className="cursor-pointer group grid gap-2 sm:gap-4 px-3 border border-dark-3 py-3 rounded-lg"
+              >
+                <div className=" w-[150px] xsm:w-[200px] md:w-[240px] h-[120px] xsm:h-[170px] md:h-[200px] relative bg-dark-3 overflow-hidden rounded-lg">
                   <img
                     className="object-cover w-full h-full object-center"
                     src={BASE_URL + "/" + quiz.backImage}
@@ -79,14 +83,14 @@ export default function QuizPopular() {
                   </button>
                 </div>
 
-                <div>
-                  <h2 className="text-sm font-secondary font-bold">
+                <div className="grid sm:gap-2 md:gap-0">
+                  <h2 className=" text-[13px] xsm:text-sm md:text-[16px] font-secondary font-bold">
                     {quiz.title}
                   </h2>
-                  <p className="text-sm font-light capitalize text-dark-2">
+                  <p className="text-[13px] xsm:text-sm font-light capitalize text-dark-2">
                     {quiz.description.substring(0, 30)}...
                   </p>
-                  <div className="flex items-center justify-between">
+                  <div className="flex flex-col xsm:flex-row items-center justify-between">
                     <div className="flex gap-3">
                       <div className="flex gap-1 items-center">
                         <LuHeart />
@@ -97,9 +101,11 @@ export default function QuizPopular() {
                         <span>{quiz.totalComments}</span>
                       </div>
                     </div>
-                    <p className="text-sm text-dark-2 font-light">
+                    <p className="text-[13px] xsm:text-sm text-dark-2 font-light">
                       Created by{" "}
-                      <span className="font-secondary font-bold">Flan</span>
+                      <span className="font-secondary font-bold">
+                        {quiz.user.username}
+                      </span>
                     </p>
                   </div>
                 </div>

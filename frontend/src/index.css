@@ -4,7 +4,7 @@
 
 
 .layer {
-  @apply max-w-[1300px] m-auto
+  @apply 3xl:max-w-[1300px] 2xl:max-w-[1200px] xl:max-w-[1100px] lg:max-w-[950px] xmd:max-w-[800px] m-auto md:max-w-[700px] sm:max-w-[600px]
 }
 
 .back-img {
@@ -62,4 +62,46 @@
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #FBFADA;
+}
+
+.animation-rotate {
+  animation: rotatation 10s infinite linear;
+  transform-origin: center center;
+}
+
+@keyframes rotatation {
+  from {
+      transform: rotate(0deg);
+  }
+
+  to {
+      transform: rotate(360deg);
+  }
+}
+
+.animation-rotate-inverse {
+  animation: rotatation-inverse 10s infinite linear;
+  transform-origin: center center;
+}
+
+@keyframes rotatation-inverse {
+  from {
+      transform: rotate(360deg);
+  }
+
+  to {
+      transform: rotate(0deg);
+  }
+}
+
+.menu-open {
+  right: 0;
+  transition-property: right;
+  transition-duration: 0.3s; /* Adjust duration as needed */
+}
+
+.menu-closed {
+  right: -100%;
+  transition-property: right;
+  transition-duration: 0.3s; /* Adjust duration as needed */
 }
