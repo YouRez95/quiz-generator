@@ -23,7 +23,7 @@ export function isValidRegisterForm(inputs) {
   
   if (!isGoodPassword(inputs.password)) {
     return {
-      message: "Your Password must include uppercase, lowercase and that it is longer than 6 characters.",
+      message: "Your Password must include uppercase, lowercase and is longer than 6 characters.",
       success: false
     }
   }

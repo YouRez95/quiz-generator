@@ -52,7 +52,7 @@ export default function QuizByTopic({ topic }) {
               <img
                 src={`${BASE_URL}/${quiz.backImage}`}
                 alt={quiz.title}
-                className="w-full h-[150px] rounded-md flex-1 object-cover"
+                className="w-full max-h-[150px] rounded-md flex-1 object-cover"
               />
               <div className="flex flex-col gap-5 w-full justify-between">
                 <div className="flex flex-col w-full gap-3">

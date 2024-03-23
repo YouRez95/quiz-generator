@@ -34,6 +34,12 @@
   min-height: calc(100vh - 71px);
 }
 
+@media (max-width: 400px) {
+  .height-calc {
+    min-height: calc(100vh - 51px);
+  }
+}
+
 .bg-position {
   background-position: 200% 50%;
 }

@@ -61,9 +61,9 @@ export default function Register() {
   return (
     <div className="relative">
       {successRegister && <Modal fullname={inputs.fullname} />}
-      <div className="flex items-start justify-end height-calc bg-light">
-        <div className="text-light flex flex-col gap-7 w-[50vw] height-calc bg-dark px-10">
-          <h2 className="font-bold  mt-10 text-4xl font-secondary">
+      <div className="flex items-start justify-center md:justify-end height-calc bg-light">
+        <div className="text-light flex flex-col gap-7 w-full md:w-[80vw] xmd:w-[70vw] lg:w-[50vw] lg:max-w-[800px] height-calc bg-dark pt-2 pb-10 px-2 md:px-10">
+          <h2 className="font-bold mt-10 text-xl xsm:text-4xl font-secondary">
             Hi, Welcome to Quizzz
           </h2>
           <form className="flex flex-col gap-4" onSubmit={handleSubmitForm}>
@@ -95,7 +95,7 @@ export default function Register() {
 
             <AvatarRegister onChange={handleChangeInput} />
 
-            <div className="mt-10 flex gap-6">
+            <div className="mt-10 flex flex-col sm:flex-row md:flex-col 3xl:flex-row gap-6 items-center">
               <button
                 disabled={loading}
                 type="submit"
@@ -104,18 +104,21 @@ export default function Register() {
                 {loading ? "Loading" : "Register"}
               </button>
 
-              <ButtonLtoR to="/login" className="flex-1 text-center">
+              <ButtonLtoR
+                to="/login"
+                className="flex-1 text-center w-full xl:text-sm"
+              >
                 Already have an account login
               </ButtonLtoR>
             </div>
           </form>
 
           {errorMsg && (
-            <div className="w-[50%] m-auto relative">
-              <div className="bg-light absolute w-[40px] h-[40px] flex items-center justify-center rounded-full text-dark font-extrabold -top-2 -left-2">
+            <div className="w-full m-auto relative text-sm max-w-[500px]">
+              <div className="bg-light absolute w-[20px] h-[20px] flex items-center justify-center rounded-full text-dark font-extrabold -top-2 -left-2">
                 !
               </div>
-              <p className="border w-full text-center px-9 py-5">{errorMsg}</p>
+              <p className="border w-full text-center px-9 py-2">{errorMsg}</p>
             </div>
           )}
         </div>

@@ -9,13 +9,13 @@ export default function AvatarRegister({ onChange }) {
     onChange(event.target.alt, "avatar");
   }
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 max-w-[700px]">
       <div className="text-xl font-extralight text-light">
         Choose your avatar
       </div>
-      <div className="bg-light grid grid-cols-9 p-6 gap-6 h-[200px] overflow-y-scroll rounded-sm">
+      <div className="bg-light grid grid-cols-4 xsm:grid-cols-5 sm:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6 3xl:grid-cols-7 p-2 gap-6 h-[200px] overflow-y-scroll rounded-sm">
         {avatars.map((avatar) => (
-          <div key={avatar.id}>
+          <div key={avatar.id} className="size-18">
             <img
               onClick={(e) => handleSelectAvatar(e, avatar.id)}
               src={avatar.image}
