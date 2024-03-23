@@ -53,10 +53,16 @@ export default function NavbarNotAuth() {
             </div>
 
             <div className="flex flex-col">
-              <Link className="border-b font-bold  text-[16px] xsm:text-lg font-secondary border-dark px-3 py-5 hover:bg-light">
+              <Link
+                to="/register"
+                className="border-b font-bold  text-[16px] xsm:text-lg font-secondary border-dark px-3 py-5 hover:bg-light"
+              >
                 Register
               </Link>
-              <Link className="border-b font-bold text-[16px] xsm:text-lg font-secondary border-dark px-3 py-5 hover:bg-light">
+              <Link
+                to="/login"
+                className="border-b font-bold text-[16px] xsm:text-lg font-secondary border-dark px-3 py-5 hover:bg-light"
+              >
                 Login
               </Link>
             </div>
