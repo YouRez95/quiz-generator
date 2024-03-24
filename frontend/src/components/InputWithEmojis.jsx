@@ -28,10 +28,10 @@ export default function InputWithEmojis({
   }
 
   return (
-    <div className="relative">
+    <div className="relative max-w-[500px]">
       {isFocus && (
         <div
-          className="absolute -left-4 top-[0%] border rounded-full w-7 h-7 text-center cursor-pointer"
+          className="absolute hidden sm:block bg-white z-10 -right-4 top-[0%] border rounded-full w-7 h-7 text-center cursor-pointer"
           onClick={handleShowEmojis}
         >
           <span className="w-full h-full text-xl">+</span>
@@ -57,8 +57,13 @@ export default function InputWithEmojis({
         />
       )}
       {showEmojis && (
-        <div className="absolute -left-60 z-20 w-fit">
-          <Picker data={data} onEmojiSelect={handleEmojiSelect} />
+        <div className="absolute -right-0 z-20  w-fit shadow-lg shadow-white rounded-lg">
+          <Picker
+            data={data}
+            onEmojiSelect={handleEmojiSelect}
+            className="bg-white"
+            theme="light"
+          />
         </div>
       )}
     </div>

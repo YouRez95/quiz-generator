@@ -10,8 +10,8 @@ export default function ImageSelectedInForm({ setFile, prevImage }) {
   };
 
   return (
-    <div className=" flex flex-col">
-      <p className="text-md font-bold font-secondary">
+    <div className="flex flex-col flex-1">
+      <p className="text-sm md:text-base font-bold font-secondary">
         {prevImage
           ? "Choose another profile picture for your quiz"
           : "Choose a profile picture for your quiz"}
@@ -34,7 +34,11 @@ export default function ImageSelectedInForm({ setFile, prevImage }) {
         <img src={prevImage} alt="" className="w-60 cover self-center mt-2" />
       )}
       {image && (
-        <img src={image} alt="" className="w-60 cover self-center mt-2" />
+        <img
+          src={image}
+          alt=""
+          className="w-60 cover self-center mt-2 rounded-lg"
+        />
       )}
     </div>
   );

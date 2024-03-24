@@ -29,21 +29,29 @@ export default function TotalQuestionLineInCreateQuestionPage({
     }
   }, [token]);
 
+  console.log(totalQuestion);
+
   return (
-    <div
-      className={`-mt-10 mb-10 flex relative ${
-        totalQuestion > 5 ? "gap-9" : "gap-20"
-      }`}
-    >
-      <div className="w-full h-1 bg-dark absolute top-[50%] transform translate-y-[-50%]" />
-      {totalQuestion.map((qst) => (
-        <div
-          key={qst}
-          className="bg-dark text-light w-7 h-7 rounded-full flex justify-center items-center relative"
-        >
-          {numQuestion > qst ? <FaCheck /> : <span>{qst}</span>}
-        </div>
-      ))}
+    <div className="flex w-[90vw] md:w-[700px]  justify-center items-center m-auto">
+      <div
+        className={`my-8 flex w-full m-auto sm:w-full relative justify-between mx-2 ${
+          totalQuestion.length > 5 ? "" : ""
+        }`}
+      >
+        <div className="w-full h-1 bg-dark absolute top-[50%] left-0 right-0 transform translate-y-[-50%]" />
+        {totalQuestion.map((qst) => (
+          <div
+            key={qst}
+            className="bg-dark text-light size-5 rounded-full flex justify-center items-center relative"
+          >
+            {numQuestion > qst ? (
+              <FaCheck />
+            ) : (
+              <span className="text-sm md:text-base">{qst}</span>
+            )}
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

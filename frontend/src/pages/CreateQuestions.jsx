@@ -65,25 +65,30 @@ export default function CreateQuestions() {
   }
 
   return (
-    <div className="w-full bg-light h-[100vh] flex flex-col justify-center items-center relative">
-      <TotalQuestionLineInCreateQuestionPage
-        id={id}
-        numQuestion={numQuestion}
-      />
+    <div className="w-full bg-light min-h-[100vh] flex flex-col justify-center items-center relative m-auto">
+      <div className="my-20">
+        <TotalQuestionLineInCreateQuestionPage
+          id={id}
+          numQuestion={numQuestion}
+        />
 
-      <FormCreateQuestion
-        handleSubmitQuestion={handleSubmitQuestion}
-        setQuestionData={setQuestionData}
-        numQuestion={numQuestion}
-        questionData={questionData}
-        isLoading={loading}
-      />
+        <FormCreateQuestion
+          handleSubmitQuestion={handleSubmitQuestion}
+          setQuestionData={setQuestionData}
+          numQuestion={numQuestion}
+          questionData={questionData}
+          isLoading={loading}
+        />
 
-      {errorMsg && (
-        <div className="bg-dark mt-2 text-light font-secondary px-4 py-2">
-          {errorMsg}
-        </div>
-      )}
+        {errorMsg && (
+          <div className="bg-dark mt-2 w-[90vw] md:w-[700px] flex text-sm items-center justify-center text-light font-secondary gap-3 py-1 m-auto">
+            <span className="bg-white size-6 hidden md:flex text-xl font-bold text-dark items-center justify-center rounded-full">
+              !
+            </span>
+            {errorMsg}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

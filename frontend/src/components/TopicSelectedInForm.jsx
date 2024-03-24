@@ -28,10 +28,10 @@ export default function TopicSelectedInForm({
 
   return (
     <div className="grid gap-3">
-      <p className="text-md font-bold font-secondary">
+      <p className="text-sm md:text-base font-bold font-secondary">
         Select the category of your Quiz :
       </p>
-      <div className="grid grid-cols-3 w-fit gap-3">
+      <div className="grid grid-cols-2 md:grid-cols-3 w-fit gap-3">
         {topics.map((topic) => {
           const TopicIcon = topic.icon;
           return (

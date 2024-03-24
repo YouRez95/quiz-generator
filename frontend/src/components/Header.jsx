@@ -56,7 +56,7 @@ export default function Header({ inCreateQuiz }) {
 
       {user && (
         <header className="border-b-2 border-dark bg-light sticky top-0 z-20">
-          <div className="flex justify-between h-[70px] items-center layer relative px-3">
+          <div className="flex justify-between h-[50px] xsm:h-[70px] items-center layer relative px-3">
             <Link to="/" className="text-lg">
               <img src={logo} className="w-12 sm:w-[55px]" alt="" />
             </Link>
@@ -90,7 +90,7 @@ export default function Header({ inCreateQuiz }) {
             </div>
 
             {dropOpen && (
-              <div className="absolute bg-dark text-light top-[70px] transition-all right-0 w-[200px] p-3 rounded-lg">
+              <div className="absolute bg-dark text-light top-[50px] xsm:top-[70px] transition-all right-0 w-[200px] p-3 rounded-lg">
                 <ul className="flex flex-col w-full" ref={linksRef}>
                   <li className="w-full rounded-md">
                     <Link

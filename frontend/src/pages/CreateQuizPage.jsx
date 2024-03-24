@@ -67,21 +67,21 @@ export default function CreateQuizPage() {
     <div>
       <Header inCreateQuiz={true} />
 
-      <div className="layer text-dark">
+      <div className="layer text-dark px-3">
         <div className="mt-20 grid gap-10">
           <div>
-            <h1 className="font-extrabold text-3xl font-secondary">
+            <h1 className="font-extrabold text-xl font-secondary">
               Create Your Quiz....
             </h1>
           </div>
-          <form onSubmit={handleCreateQuiz}>
-            <div className="flex items-start">
-              <div className="grid gap-20">
+          <form onSubmit={handleCreateQuiz} className="pb-10">
+            <div className="flex flex-col xl:flex-row items-start mb-5">
+              <div className="flex flex-1 flex-col w-full gap-10">
                 <InputWithEmojis
                   titleInput={titleInput}
                   setTitleInput={setTitleInput}
                   tagHtml="input"
-                  className="outline-none w-[700px] h-[60px] text-xl font-bold font-secondary overflow-hidden pl-7"
+                  className="outline-none border-b border-dark-3 rounded-lg w-full max-w-[500px] max-h-[60px] min-h-[40px] h-full text-base font-bold font-secondary overflow-hidden pl-3"
                   placeholder="Title to your quiz"
                   maxLength={55}
                 />
@@ -89,7 +89,7 @@ export default function CreateQuizPage() {
                   titleInput={descInput}
                   setTitleInput={setDescInput}
                   tagHtml="textarea"
-                  className=" outline-none w-[700px] h-[100px] text-xl font-bold font-secondary overflow-hidden pl-7"
+                  className=" outline-none border-y border-dark-3 rounded-lg w-full max-w-[500px] min-h-[100px] text-base font-bold font-secondary overflow-hidden pl-3"
                   placeholder="Description"
                   maxLength={300}
                 />
@@ -97,7 +97,7 @@ export default function CreateQuizPage() {
 
               <ImageSelectedInForm setFile={setFile} />
             </div>
-            <div className="flex">
+            <div className="flex flex-col xl:flex-row">
               <div className="grid gap-10 flex-1">
                 <TopicSelectedInForm
                   topicSelected={topicSelected}
@@ -105,16 +105,16 @@ export default function CreateQuizPage() {
                 />
 
                 <div className="grid gap-3">
-                  <p className="text-md font-bold font-secondary">
+                  <p className="text-sm  md:text-base font-bold font-secondary">
                     You Want your Quiz to be :
                   </p>
-                  <div className="flex gap-20">
+                  <div className="flex gap-20 text-sm md:text-base">
                     <div className="flex gap-2 items-center">
                       <input
                         name="isPublic"
                         id="public"
                         type="radio"
-                        className="border w-6 h-6 relative"
+                        className="border size-5 md:size-6 relative"
                         onChange={handleChangeRadio}
                         checked={isPublic}
                       />
@@ -126,7 +126,7 @@ export default function CreateQuizPage() {
                         name="isPublic"
                         id="private"
                         type="radio"
-                        className="border w-6 h-6 relative"
+                        className="border size-5 md:size-6 relative"
                         onChange={handleChangeRadio}
                       />
                       <label htmlFor="private">Private</label>
@@ -134,15 +134,15 @@ export default function CreateQuizPage() {
                   </div>
                 </div>
               </div>
-              <div className="flex-1">
+              <div className="flex-1 mt-4">
                 <label
                   htmlFor="numberQuestion"
-                  className="text-md font-bold font-secondary mb-3 block"
+                  className="text-sm md:text-base font-bold font-secondary mb-3 block"
                 >
-                  Enter the number of Questions you want add To your quiz :
+                  Enter the number of Questions you want add To your quiz:
                 </label>
                 <input
-                  className="border border-dark w-20 h-10 outline-none text-center"
+                  className="border border-dark w-20 h-8 md:h-10 outline-none text-center"
                   id="numberQuestion"
                   type="number"
                   max={10}
@@ -151,17 +151,17 @@ export default function CreateQuizPage() {
                 />
               </div>
             </div>
-            <div className="mt-20 text-right">
+            <div className="mt-20 w-full md:text-right">
               <button
                 disabled={loading}
-                className="bg-dark px-20 py-3 border border-dark text-light rounded-full font-secondary font-bold hover:text-dark hover:bg-light"
+                className="bg-dark w-full max-w-[500px] md:w-[200px] py-2 border border-dark text-light rounded-full font-secondary font-bold hover:text-dark hover:bg-light"
               >
                 Next
               </button>
             </div>
 
             {error && (
-              <div className="border border-dark bg-dark text-light w-fit p-5 flex gap-2 items-center mb-6">
+              <div className="border m-auto border-dark bg-dark text-light w-fit px-5 py-3 flex gap-2 justify-center items-center my-6">
                 <MdErrorOutline className="text-2xl" />
                 <p>{error}</p>
               </div>
