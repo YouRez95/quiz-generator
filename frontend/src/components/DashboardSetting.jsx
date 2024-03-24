@@ -29,14 +29,14 @@ export default function DashboardSetting() {
 
   return (
     <div className="pt-20 grid gap-10">
-      <h1 className="text-dark font-secondary text-3xl font-bold">Settings</h1>
+      <h1 className="text-dark font-secondary text-xl font-bold">Settings</h1>
 
       <form
         onSubmit={handleSubmitUpdateUserData}
-        className="flex flex-col gap-10 w-[800px] max-w-[800px] m-auto items-start"
+        className="flex flex-col gap-10 md:w-full max-w-[800px] m-auto items-start"
       >
-        <div className=" flex items-end gap-4">
-          <label htmlFor="email" className="font-secondary text-xl ">
+        <div className="flex flex-col items-start w-full">
+          <label htmlFor="email" className="font-secondary text-base ">
             Email
           </label>
           <input
@@ -44,41 +44,41 @@ export default function DashboardSetting() {
             id="email"
             value={user.email}
             readOnly
-            className="border-b-2 px-2 py-1 outline-none border-dark min-w-[300px] text-dark-2"
+            className="border-b-2 px-2 py-1 outline-none border-dark w-full text-dark-2"
           />
         </div>
 
-        <div className=" flex items-end gap-4">
-          <label htmlFor="fullname" className="font-secondary text-xl">
+        <div className="flex flex-col items-start w-full">
+          <label htmlFor="fullname" className="font-secondary text-base">
             Fullname
           </label>
           <input
             onChange={handleChangeInputs}
             type="text"
             id="fullname"
-            placeholder={user.fullname}
-            className="border-b-2 px-2 py-1 outline-none border-dark min-w-[300px] text-dark-2"
+            defaultValue={user.fullname}
+            className="border-b-2 px-2 py-1 outline-none border-dark text-dark-2 w-full"
           />
         </div>
 
-        <div className=" flex items-end gap-4">
-          <label htmlFor="username" className="font-secondary text-xl">
+        <div className="flex flex-col items-start w-full">
+          <label htmlFor="username" className="font-secondary text-base">
             username
           </label>
           <input
             onChange={handleChangeInputs}
             type="text"
             id="username"
-            placeholder={user.username}
-            className="border-b-2 px-2 py-1 outline-none border-dark min-w-[300px] text-dark-2"
+            defaultValue={user.username}
+            className="border-b-2 px-2 py-1 outline-none border-dark text-dark-2 w-full"
           />
         </div>
         <div className=" flex flex-col items-start gap-1">
           <p className="font-secondary text-xl">Change Avatar</p>
-          <AvatarRegister onChange={handleAvatar} />
+          <AvatarRegister onChange={handleAvatar} prevAvatar={user.avatar} />
         </div>
 
-        <div className="mt-10 flex justify-end w-full">
+        <div className="mt-10 mb-32 flex justify-end w-full">
           <button className="bg-dark px-4 py-2 rounded-full text-light">
             Update Profile
           </button>

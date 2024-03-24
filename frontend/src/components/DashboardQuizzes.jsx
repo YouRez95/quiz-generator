@@ -38,7 +38,7 @@ export default function DashboardQuizzes() {
       {!isLoading && quizzes.length === 0 ? (
         <div>No quizzes founded</div>
       ) : (
-        <ul className="flex flex-wrap justify-center gap-x-7 gap-y-20  mb-20 cursor-pointer">
+        <ul className="grid justify-items-center grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-3 gap-y-10 sm:gap-y-20 mb-40 cursor-pointer">
           {quizzes.map((quiz) => (
             <DashboardCardQuizzes quiz={quiz} key={quiz._id} />
           ))}

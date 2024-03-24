@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { GoHeart } from "react-icons/go";
 import { LiaCommentSolid } from "react-icons/lia";
+import { FiEdit2 } from "react-icons/fi";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 import { IoIosArrowDown } from "react-icons/io";
@@ -12,14 +13,14 @@ export default function DashboardCardQuizzes({ quiz }) {
   return (
     <li
       key={quiz._id}
-      className="w-[250px] flex flex-col justify-between hover:scale-110 transition-all group"
+      className="w-[250px] flex flex-col justify-between sm:hover:scale-110 transition-all group bg-white py-4 px-2 rounded-lg"
       onMouseEnter={() => setIsHover(true)}
       onMouseLeave={() => {
         setIsHover(false);
         setUpdateBtn(false);
       }}
     >
-      <div className="w-full h-[200px] overflow-hidden rounded-lg relative">
+      <div className="w-full h-[150px] overflow-hidden rounded-lg relative">
         <img
           src={`${BASE_URL}/${quiz.backImage}`}
           alt=""
@@ -35,9 +36,11 @@ export default function DashboardCardQuizzes({ quiz }) {
         <h2 className="font-secondary font-bold text-md text-dark">
           {quiz.title}
         </h2>
-        <p className="font-light text-dark-2 text-sm">{quiz.description}</p>
+        <p className="font-light text-dark-2 text-sm">
+          {quiz.description.substring(0, 50)}...
+        </p>
       </div>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between mt-5">
         <div className="flex gap-4">
           <div className="flex items-center gap-1">
             <p className="text-md">{quiz.totalLikes}</p>
@@ -60,19 +63,19 @@ export default function DashboardCardQuizzes({ quiz }) {
             className="flex items-center gap-3 bg-dark text-light px-3 py-1"
             onClick={() => setUpdateBtn((prev) => !prev)}
           >
-            Update <IoIosArrowDown />
+            <FiEdit2 className="" /> <IoIosArrowDown />
           </button>
           {updateBtn && isHover && (
-            <div className="absolute z-20 flex flex-col text-[15px] bg-light w-full border">
+            <div className="absolute z-20 right-0 flex flex-col text-[15px] bg-light w-fit border">
               <Link
                 to={`update/${quiz._id}`}
-                className="pl-1 pt-1 font-secondary font-medium hover:bg-dark-2 hover:text-light"
+                className="p-2 font-secondary font-medium hover:bg-dark-2 hover:text-light"
               >
                 Quiz
               </Link>
               <Link
                 to={`update/${quiz._id}/questions`}
-                className="pl-1 pt-1 font-secondary font-medium hover:bg-dark-2 hover:text-light"
+                className="p-2 font-secondary font-medium hover:bg-dark-2 hover:text-light"
               >
                 Questions
               </Link>

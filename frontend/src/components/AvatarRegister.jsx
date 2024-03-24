@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { avatars } from "../data";
 
-export default function AvatarRegister({ onChange }) {
-  const [avatarSelected, setAvatarSelected] = useState(1);
+export default function AvatarRegister({ onChange, prevAvatar }) {
+  const [avatarSelected, setAvatarSelected] = useState(
+    +prevAvatar.split("")[prevAvatar.length - 1] || 1
+  );
 
   function handleSelectAvatar(event, avatarId) {
     setAvatarSelected(avatarId);

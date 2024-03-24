@@ -8,7 +8,7 @@ export default function DashboardNotifications() {
   console.log("notifi", notifications);
   return (
     <div className="pt-20 grid gap-10">
-      <h1 className="text-dark font-secondary text-3xl font-bold">
+      <h1 className="text-dark font-secondary text-xl font-bold">
         Dashboard Notifications
       </h1>
       <div className="mx-6">

@@ -8,8 +8,12 @@ export default function DashboardStatistiques() {
   if (!user) return <Loading />;
 
   return (
-    <div className="pt-20 font-bold text-xl flex gap-3">
-      Welcome Back <p className="font-secondary">{user.username}</p>
+    <div>
+      <div className="pt-20 font-bold text-xl text-dark flex gap-3">
+        Welcome Back, <p className="font-secondary">{user.username}!</p>
+      </div>
+
+      <div>{/* Quiz played and score will be here later */}</div>
     </div>
   );
 }

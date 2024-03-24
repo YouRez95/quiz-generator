@@ -65,7 +65,7 @@ export async function postUserLogin(req, res) {
 export async function changeUserProfile(req, res) {
   try {
     const {username, fullname, avatar} = req.body;
-    const user = await User.findById(req.userId).select('-password -email')
+    const user = await User.findById(req.userId).select('-password')
 
     if (username && (username !== user.username)) {
       user.username = username;
