@@ -13,7 +13,7 @@ export default function NavbarNotAuth() {
   return (
     <header className="border-b-2 border-light bg-dark sticky top-0 z-20 px-3 md:px-0">
       <div className="flex justify-between h-[50px] xsm:h-[70px] items-center layer">
-        <Link to="/" className="">
+        <Link to="/" className="" onClick={() => setMenuOpen(false)}>
           <img
             src={logo}
             className="w-[90px] xsm:w-[100px] md:w-[140px]"
@@ -56,12 +56,14 @@ export default function NavbarNotAuth() {
               <Link
                 to="/register"
                 className="border-b font-bold  text-[16px] xsm:text-lg font-secondary border-dark px-3 py-5 hover:bg-light"
+                onClick={() => setMenuOpen(false)}
               >
                 Register
               </Link>
               <Link
                 to="/login"
                 className="border-b font-bold text-[16px] xsm:text-lg font-secondary border-dark px-3 py-5 hover:bg-light"
+                onClick={() => setMenuOpen(false)}
               >
                 Login
               </Link>

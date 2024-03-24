@@ -7,6 +7,7 @@ import Comments from "../components/Comments";
 import HomeAuthCardQuiz from "../components/HomeAuthCardQuiz";
 import { UserContext } from "../store/user-context";
 import socketConnection from "../socket";
+import FooterAuth from "../components/FooterAuth";
 
 const categories = [
   {
@@ -59,49 +60,57 @@ export default function HomeAuth() {
   }, [user, socketState]);
 
   return (
-    <div className="layer">
-      {showComments.isShow && (
-        <Comments
-          showComments={showComments}
-          setShowComments={setShowComments}
-        />
-      )}
-      <div className="mt-20">
-        <ul className="flex border-b border-dark-3 w-fit font-medium text-dark">
-          {categories.map((category) => (
-            <li
-              key={category.id}
-              className={`font-secondary border-dark cursor-pointer px-5 ${
-                categorySelected.topic === category.topic && "border-b-2 border"
-              }`}
-              onClick={() => setCategorySelected(category)}
-            >
-              {category.topic}
-            </li>
-          ))}
-        </ul>
-
-        {isLoading && <Loading />}
-
-        {!isLoading && data.length === 0 && (
-          <div className="font-secondary text-center my-10">
-            No quizzes created yet, Be the first....
-          </div>
+    <>
+      <div className="layer pb-60">
+        {showComments.isShow && (
+          <Comments
+            showComments={showComments}
+            setShowComments={setShowComments}
+          />
         )}
+        <div className="mt-20 px-3">
+          <ul className="flex border-b max-w-[90vw] overflow-y-scroll scrollbar-hide border-dark-3 w-fit font-medium text-dark">
+            {categories.map((category) => {
+              const Icon = category.icon;
+              return (
+                <li
+                  key={category.id}
+                  className={`font-secondary flex gap-5 items-center border-dark cursor-pointer px-3 ${
+                    categorySelected.topic === category.topic &&
+                    "border border-dark bg-dark-2 text-light"
+                  }`}
+                  onClick={() => setCategorySelected(category)}
+                >
+                  <Icon />
+                  {category.topic}
+                </li>
+              );
+            })}
+          </ul>
 
-        {!isLoading && data.length > 0 && (
-          <div className="grid grid-cols-5 gap-x-5 gap-y-10 mt-7">
-            {data.map((quiz, index) => (
-              <HomeAuthCardQuiz
-                key={quiz._id}
-                quiz={quiz}
-                setData={setData}
-                setShowComments={setShowComments}
-              />
-            ))}
-          </div>
-        )}
+          {isLoading && <Loading />}
+
+          {!isLoading && data.length === 0 && (
+            <div className="font-secondary text-center my-10">
+              No quizzes created yet, Be the first....
+            </div>
+          )}
+
+          {!isLoading && data.length > 0 && (
+            <div className="grid grid-cols-1 sm:grid-cols-2 xmd:grid-cols-3 xl:grid-cols-4 place-items-center sm:place-items-start gap-x-5 gap-y-10 mt-7">
+              {data.map((quiz, index) => (
+                <HomeAuthCardQuiz
+                  key={quiz._id}
+                  quiz={quiz}
+                  setData={setData}
+                  setShowComments={setShowComments}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+      <FooterAuth />
+    </>
   );
 }

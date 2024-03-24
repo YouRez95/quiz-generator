@@ -37,8 +37,8 @@ export default function HomeAuthCardQuiz({ quiz, setShowComments }) {
     }
   }
   return (
-    <div className="flex flex-col gap-x-3 cursor-pointer group">
-      <div className="relative w-[250px] h-[200px] bg-dark-3 overflow-hidden rounded-lg">
+    <div className="flex flex-col w-full min-w-[100px] max-w-[300px] gap-x-3 cursor-pointer group">
+      <div className="relative h-[200px] bg-dark-3 overflow-hidden rounded-lg">
         <img
           className="object-cover absolute w-full h-full"
           src={`${BASE_URL}/${quiz.backImage}`}

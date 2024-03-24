@@ -56,17 +56,14 @@ export default function Header({ inCreateQuiz }) {
 
       {user && (
         <header className="border-b-2 border-dark bg-light sticky top-0 z-20">
-          <div className="flex justify-between h-[70px] items-center layer relative">
+          <div className="flex justify-between h-[70px] items-center layer relative px-3">
             <Link to="/" className="text-lg">
-              {/* <p className="font-secondary text-center text-dark border-2 border-dark block font-extrabold">
-                ?
-              </p> */}
-              <img src={logo} className="w-[55px]" alt="" />
+              <img src={logo} className="w-12 sm:w-[55px]" alt="" />
             </Link>
 
             <div className="flex gap-6">
               {!inCreateQuiz && (
-                <button className="bg-dark text-light px-4 py-2 rounded-full font-bold">
+                <button className="bg-dark text-light px-4 py-2 rounded-full font-bold hidden sm:block">
                   <Link className="font-secondary" to="/create-quiz">
                     Create Your Quiz
                   </Link>
@@ -84,11 +81,11 @@ export default function Header({ inCreateQuiz }) {
                   </div>
                 )}
                 <img
-                  className="border-dark w-10 h-10 border-1 border rounded-full"
+                  className="border-dark size-10 border-1 border rounded-full"
                   src={`${BASE_URL}/avatars/${user.avatar}.png`}
                   alt=""
                 />
-                <MdKeyboardArrowDown className=" w-6 h-6" />
+                <MdKeyboardArrowDown className="w-6 h-6" />
               </div>
             </div>
 
@@ -101,6 +98,15 @@ export default function Header({ inCreateQuiz }) {
                       className="block w-full py-2 px-2 rounded-md hover:bg-dark-2"
                     >
                       Profile
+                    </Link>
+                  </li>
+
+                  <li className="w-full rounded-md">
+                    <Link
+                      to="/create-quiz"
+                      className="block w-full py-2 px-2 rounded-md hover:bg-dark-2 sm:hidden"
+                    >
+                      Create Quiz
                     </Link>
                   </li>
 
@@ -117,7 +123,7 @@ export default function Header({ inCreateQuiz }) {
 
                   <li className="w-full">
                     <p
-                      className="block w-full py-2 px-2 rounded-md hover:bg-dark-2"
+                      className="block w-full py-2 px-2 rounded-md hover:bg-dark-2 cursor-pointer"
                       onClick={handleLogout}
                     >
                       Logout
