@@ -4,13 +4,19 @@ import { UserContext } from "../store/user-context";
 import NavbarNotAuth from "./NavbarNotAuth";
 import { MdKeyboardArrowDown } from "react-icons/md";
 import logo from "../assets/logo-single.png";
-import socketConnection from "../socket";
+import { notifications as apiNotifications } from "../api";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 export default function Header({ inCreateQuiz }) {
-  const { user, handleLogout, socketState, setNotifications, notifications } =
-    useContext(UserContext);
+  const {
+    user,
+    handleLogout,
+    socketState,
+    setNotifications,
+    notifications,
+    token,
+  } = useContext(UserContext);
   const [dropOpen, setDropOpen] = useState(false);
   const menuRef = useRef();
   const linksRef = useRef();
@@ -49,6 +55,30 @@ export default function Header({ inCreateQuiz }) {
       setNotifications((prev) => [...prev, data]);
     });
   }, [socketState]);
+
+  async function getNotifications() {
+    const resData = await apiNotifications(token);
+
+    for (let i = 0; i < resData.notifications.length; i++) {
+      const newNotification = {
+        _id: resData.notifications[i]._id,
+        userAvatar: resData.notifications[i].senderId.avatar,
+        action: resData.notifications[i].notificationType,
+        username: resData.notifications[i].senderId.username,
+        quizName: resData.notifications[i].quizName,
+        text: resData.notifications[i]?.text,
+      };
+      setNotifications((prev) => [...prev, newNotification]);
+    }
+  }
+
+  console.log(notifications);
+
+  useEffect(() => {
+    if (token) {
+      getNotifications();
+    }
+  }, [token]);
 
   return (
     <>

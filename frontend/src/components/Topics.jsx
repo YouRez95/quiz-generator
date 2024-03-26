@@ -3,7 +3,12 @@ import SubTitleQuiz from "./SubTitleQuiz";
 import { IoIosSearch } from "react-icons/io";
 import { topics } from "../data";
 
-export default function Topics({ topicSelected, onChangeTopic }) {
+export default function Topics({
+  topicSelected,
+  onChangeTopic,
+  setPage,
+  setDataQuizByTopic,
+}) {
   return (
     <div className="">
       <SubTitleQuiz title={"Search by Topic"} icon={IoIosSearch} />
@@ -13,9 +18,11 @@ export default function Topics({ topicSelected, onChangeTopic }) {
           const IconTopic = topic.icon;
           return (
             <button
-              onClick={() =>
-                onChangeTopic({ topic: topic.topic, icon: topic.icon })
-              }
+              onClick={() => {
+                onChangeTopic({ topic: topic.topic, icon: topic.icon });
+                setPage(1);
+                setDataQuizByTopic([]);
+              }}
               key={topic.id}
               className={`border relative border-1 text-dark overflow-hidden border-dark-3 group flex gap-2 items-center rounded-full text-sm md:text-[16px] px-3 md:px-4 py-2 ${
                 topicSelected.topic === topic.topic && "bg-dark text-light"

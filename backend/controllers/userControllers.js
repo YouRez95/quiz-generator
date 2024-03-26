@@ -10,6 +10,7 @@ import { isValidId } from './quizControllers.js';
 import Score from '../models/scoreUser.js';
 import fs from 'fs';
 import path from 'path';
+import NotificationModel from '../models/notification.js';
 
 
 // POST -> /api/v1/user/signup
@@ -187,6 +188,59 @@ export async function postTheScoreQuiz(req, res){
 }
 
 
+// GET -> /api/v1/user/statistique
+export async function getStatistique(req, res){
+
+  const userId = req.userId; 
+//  Number of quizzes created
+
+  const quizCreatedNotCompleted = await Quiz.countDocuments({userId, isComplete: false})
+  const quizCreatedCompleted = await Quiz.countDocuments({userId, isComplete: true})
+
+// total likes Received
+  // without aggreg
+  const quizzesCreatedbyThatUser = await Quiz.find({userId})
+  let totalLikesReceivedCount = 0
+  for (let i = 0; i < quizzesCreatedbyThatUser.length; i++){
+    const likesCount = await LikeModel.countDocuments({quizId: quizzesCreatedbyThatUser[i]._id})
+    totalLikesReceivedCount += likesCount;
+  }
+
+// total likes Given
+  const totalLikesGiven = await LikeModel.countDocuments({userId})
+
+// total comments Received
+let totalCommentsReceivedCount = 0
+for (let i = 0; i < quizzesCreatedbyThatUser.length; i++){
+  const commentsCount = await Comment.countDocuments({quizId: quizzesCreatedbyThatUser[i]._id})
+  totalCommentsReceivedCount += commentsCount;
+}
+
+
+  // total comments Given
+  const totalCommentsGiven = await Comment.countDocuments({userId})
+// quizesPlayed with scores
+  
+  const quizWithScores = await Score.find({userId}).populate('quizId', 'title backImage');
+
+  res.status(200).json(
+    {
+      message: 'success', 
+      data: {
+        quizCreatedNotCompleted,
+        quizCreatedCompleted,
+        totalLikesReceivedCount,
+        totalLikesGiven,
+        totalCommentsReceivedCount,
+        totalCommentsGiven,
+        quizWithScores
+      }
+    }
+  )
+
+}
+
+
 // PUT -> api/v1/user/update-quiz/:quizId
 export async function updateQuiz(req, res){
 
@@ -300,4 +354,29 @@ export async function deleteQuestion(req, res){
   } catch (err) {
     res.status(err.statusCode || 500).json({message: err.message || "Someyhing wrong try again later"})
   } 
+}
+
+
+export async function getNotification(req, res) {
+  const userId = req.userId;
+  try {
+    const notifications = await NotificationModel.find({receiverId: userId}).populate('senderId', 'username avatar')
+    res.status(200).json({message: 'success', notifications})
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({message: "something wrong"})
+  }
+}
+
+export async function clearNotification(req, res) {
+  const userId = req.userId;
+  const notoficationId = req.params.id
+  console.log(notoficationId)
+  try {
+    await NotificationModel.findByIdAndDelete(notoficationId)
+    res.status(200).json({message: 'success'})
+  } catch (err) {
+    console.log(err)
+    res.status(500).json({message: "something wrong"})
+  }
 }

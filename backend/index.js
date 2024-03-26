@@ -9,6 +9,7 @@ import connectToDb from "./db/connection.js";
 import userRoutes from "./routes/userRoutes.js";
 import quizRoutes from "./routes/quizRoutes.js";
 import { addNewUser, getUser, init, removeUser } from "./utils/socket.js";
+import NotificationModel from "./models/notification.js";
 
 // Create the server
 const app = express();
@@ -60,22 +61,37 @@ io.on("connection", (socket) => {
     addNewUser(data, socket.id)
   });
 
-  socket.on('sendLikeQuiz', data => {
+  socket.on('sendLikeQuiz', async data => {
+    const newNotification = await NotificationModel.create({
+      senderId: data.senderUserId,
+      receiverId: data.receivedUserId,
+      notificationType: data.action,
+      quizName: data.quizName,
+      text: undefined
+    })
     if (data.receivedUserId !== data.senderUserId) {
       const receivedUser = getUser(data.receivedUserId)
       const senderUser = getUser(data.senderUserId)
       if (receivedUser?.socketId) {
-        socket.to(receivedUser.socketId).emit('receiveLikePost', {id: senderUser.userId, username: senderUser.username, quizName: data.quizName, userAvatar: data.userAvatar, action: data.action})
+        socket.to(receivedUser.socketId).emit('receiveLikePost', {_id: newNotification._id, username: senderUser.username, quizName: data.quizName, userAvatar: data.userAvatar, action: data.action})
       }
     }
   })
 
-  socket.on('sendCommentQuiz', data => {
+  socket.on('sendCommentQuiz', async data => {
+    const newNotification = await NotificationModel.create({
+      senderId: data.senderUserId,
+      receiverId: data.receivedUserId,
+      notificationType: data.action,
+      quizName: data.quizName,
+      text: data.textInput
+    })
     if (data.senderUserId !== data.receivedUserId) {
       const receivedUser = getUser(data.receivedUserId)
       const senderUser = getUser(data.senderUserId)
       if (receivedUser?.socketId) {
         socket.to(receivedUser.socketId).emit('receiveCommentsPost', {
+          _id: newNotification._id,
           userAvatar :data.userAvatar,
           quizName: data.quizName,
           action: data.action,

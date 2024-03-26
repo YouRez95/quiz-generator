@@ -8,6 +8,8 @@ export function isValidId(id) {
  return mongoose.Types.ObjectId.isValid(id)
 }
 
+const PER_PAGE = 10;
+
 // POST -> /api/v1/quiz/create
 export async function createQuiz(req, res){
   try {
@@ -32,9 +34,11 @@ export async function createQuiz(req, res){
 // GET -> /api/v1/quiz/quizzes
 export async function getMyQuizzes(req, res) {
   try {
+    const page = +req.query.page || 1;
     const userId = req.userId;
-    const quizzes = await Quiz.find({userId, isComplete: true}).sort({'createdAt': -1})
-    res.status(200).json({message: "success", data: quizzes})
+    const numOfQuizzes = await Quiz.countDocuments({userId, isComplete: true})
+    const quizzes = await Quiz.find({userId, isComplete: true}).sort({'createdAt': -1}).skip((page - 1) * PER_PAGE).limit(PER_PAGE)
+    res.status(200).json({message: "success", data: quizzes, numOfQuizzes})
   } catch(err) {
     console.log(err)
     res.status(500).json({message: 'Something Wrong Try Again Later'})
@@ -44,8 +48,10 @@ export async function getMyQuizzes(req, res) {
 // GET -> /api/v1/quiz/draft
 export async function getMyQuizzesDraft(req, res) {
   try {
+    const page = +req.query.page || 1;
     const userId = req.userId;
-    const quizzes = await Quiz.find({userId, isComplete: false}).select('-userId -isComplete -totalLikes -totalComments -publicQuiz')
+    const numOfQuizzes = await Quiz.countDocuments({userId, isComplete: false})
+    const quizzes = await Quiz.find({userId, isComplete: false}).sort({'createdAt': -1}).skip((page - 1) * PER_PAGE).limit(PER_PAGE).select('-userId -isComplete -totalLikes -totalComments -publicQuiz')
 
     const quizzesToSend = []
     for (const quiz of quizzes) {
@@ -53,7 +59,7 @@ export async function getMyQuizzesDraft(req, res) {
       quizzesToSend.push({...quiz._doc, totalQuestionFounded: questionFounded})
     }
 
-    res.status(200).json({message: "success", data: quizzesToSend})
+    res.status(200).json({message: "success", data: quizzesToSend, numOfQuizzes})
   } catch(err) {
     console.log(err)
     res.status(500).json({message: 'Something Wrong Try Again Later'})
@@ -287,9 +293,13 @@ export async function getPopularQuizzes(req, res) {
   }
 }
 
-// GET -> /api/v1/quiz/auth/popularQuiz
+// GET -> /api/v1/quiz/auth/popularQuiz/
 export async function getPopularQuizzesAuth(req, res) {
+
+  const page = +req.query.page || 1;
+
   try  {
+    const countDocuments = await Quiz.countDocuments({publicQuiz: true, isComplete: true});
     const popularQuizzes = await Quiz.aggregate([
       {
         $match: {
@@ -301,7 +311,8 @@ export async function getPopularQuizzesAuth(req, res) {
         }
       },
       {$sort: {totalLikesComments: -1}},
-      {$limit: 10},
+      {$skip: (page - 1) * PER_PAGE},
+      {$limit: PER_PAGE},
       {$lookup : {
         from: 'users',
         localField: 'userId',
@@ -343,7 +354,10 @@ export async function getPopularQuizzesAuth(req, res) {
       popularQuizzes[i].isLiked = isLiked ? true : false;
     }
 
-    return res.status(200).json({message: "success", data: popularQuizzes})
+
+    return res.status(200).json({message: "success", data: popularQuizzes, numOfQuizzes: countDocuments})
+
+  
 
   } catch(err) {
     console.log(err);
@@ -354,16 +368,21 @@ export async function getPopularQuizzesAuth(req, res) {
 // GET -> /api/v1/quiz/search/:topic
 export async function getQuizzesByTopic(req, res) {
   const {topic} = req.params;
+  const page = +req.query.page || 1;
+  console.log(page)
   try {
     let quizByTopic;
+    let countDocuments;
     if (topic === 'Other') {
       const topicsExcluded = ["Mathematics", "Science", "History", "Technology", "Sports"]
-      quizByTopic = await Quiz.find({ category: { $nin: topicsExcluded }, isComplete: true, publicQuiz: true}).populate('userId', 'username')
+      countDocuments = await Quiz.countDocuments({ category: { $nin: topicsExcluded }, isComplete: true, publicQuiz: true})
+      quizByTopic = await Quiz.find({ category: { $nin: topicsExcluded }, isComplete: true, publicQuiz: true}).sort({'createdAt': -1}).skip((page - 1) * PER_PAGE).limit(PER_PAGE).populate('userId', 'username')
     } else {
-      quizByTopic = await Quiz.find({ category: { $in: topic }, isComplete: true, publicQuiz: true}).populate('userId', 'username')
+      countDocuments = await Quiz.countDocuments({ category: { $in: topic }, isComplete: true, publicQuiz: true})
+      quizByTopic = await Quiz.find({ category: { $in: topic }, isComplete: true, publicQuiz: true}).sort({'createdAt': -1}).skip((page - 1) * PER_PAGE).limit(PER_PAGE).populate('userId', 'username')
     }
 
-    return res.status(200).json({data: quizByTopic})
+    return res.status(200).json({data: quizByTopic, numOfQuizzes: countDocuments})
   } catch (err) {
     console.log(err);
     return res.status(500).json({message: "Something Wrong Try Again Later"});
@@ -373,13 +392,17 @@ export async function getQuizzesByTopic(req, res) {
 // GET -> /api/v1/quiz/search/auth/:topic
 export async function getQuizzesByTopicAuth(req, res) {
   const {topic} = req.params;
+  const page = +req.query.page || 1;
   try {
     let quizByTopic;
+    let countDocuments;
     if (topic === 'Other') {
       const topicsExcluded = ["Mathematics", "Science", "History", "Technology", "Sports"]
-      quizByTopic = await Quiz.find({ category: { $nin: topicsExcluded }, isComplete: true, publicQuiz: true}).populate('userId', 'username')
+      countDocuments = await Quiz.countDocuments({ category: { $nin: topicsExcluded }, isComplete: true, publicQuiz: true})
+      quizByTopic = await Quiz.find({ category: { $nin: topicsExcluded }, isComplete: true, publicQuiz: true}).skip((page - 1) * PER_PAGE).limit(PER_PAGE).populate('userId', 'username')
     } else {
-      quizByTopic = await Quiz.find({ category: { $in: topic }, isComplete: true, publicQuiz: true}).populate('userId', 'username')
+      countDocuments = await Quiz.countDocuments({ category: { $in: topic }, isComplete: true, publicQuiz: true})
+      quizByTopic = await Quiz.find({ category: { $in: topic }, isComplete: true, publicQuiz: true}).skip((page - 1) * PER_PAGE).limit(PER_PAGE).populate('userId', 'username')
     }
 
     for (let i = 0; i < quizByTopic.length; i++) {
@@ -393,7 +416,7 @@ export async function getQuizzesByTopicAuth(req, res) {
       quizByTopic[i].isLiked = isLiked ? true : false;
     }
 
-    return res.status(200).json({ data: quizByTopic.map(quiz => ({ ...quiz.toObject(), isMine: quiz.isMine, isLiked: quiz.isLiked })) });
+    return res.status(200).json({ data: quizByTopic.map(quiz => ({ ...quiz.toObject(), isMine: quiz.isMine, isLiked: quiz.isLiked })), numOfQuizzes: countDocuments });
   } catch (err) {
     console.log(err);
     return res.status(500).json({message: "Something Wrong Try Again Later"});

@@ -8,7 +8,7 @@ import HomeAuthCardQuiz from "../components/HomeAuthCardQuiz";
 import { UserContext } from "../store/user-context";
 import socketConnection from "../socket";
 import FooterAuth from "../components/FooterAuth";
-
+import logo from "../assets/logo-single-white.png";
 const categories = [
   {
     id: "7",
@@ -19,7 +19,10 @@ const categories = [
 ];
 
 export default function HomeAuth() {
+  console.log("render");
   const { token, user, setSocketState, socketState } = useContext(UserContext);
+  const [page, setPage] = useState(1);
+  const [totalQuiz, setTotalQuiz] = useState(0);
   const [categorySelected, setCategorySelected] = useState(categories[0]);
   const [data, setData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -34,17 +37,22 @@ export default function HomeAuth() {
     let dataSelected;
     setIsLoading(true);
     if (categorySelected.topic === "Popular") {
-      dataSelected = await getTheThenPopularQuizAuth(token);
+      dataSelected = await getTheThenPopularQuizAuth(token, page);
     } else {
-      dataSelected = await getQuizzesByTopicAuth(categorySelected.topic, token);
+      dataSelected = await getQuizzesByTopicAuth(
+        categorySelected.topic,
+        token,
+        page
+      );
     }
-    setData(dataSelected.data);
+    setTotalQuiz(dataSelected.numOfQuizzes);
+    setData((prevData) => [...prevData, ...dataSelected.data]);
     setIsLoading(false);
   }
 
   useEffect(() => {
     handleData();
-  }, [categorySelected]);
+  }, [categorySelected, page]);
 
   useEffect(() => {
     const socket = socketConnection();
@@ -61,14 +69,15 @@ export default function HomeAuth() {
 
   return (
     <>
-      <div className="layer pb-60">
+      <div className="layer">
         {showComments.isShow && (
           <Comments
             showComments={showComments}
             setShowComments={setShowComments}
           />
         )}
-        <div className="mt-20 px-3">
+
+        <div className="mt-20 px-3 pb-40">
           <ul className="flex border-b max-w-[90vw] overflow-y-scroll scrollbar-hide border-dark-3 w-fit font-medium text-dark">
             {categories.map((category) => {
               const Icon = category.icon;
@@ -79,7 +88,11 @@ export default function HomeAuth() {
                     categorySelected.topic === category.topic &&
                     "border border-dark bg-dark-2 text-light"
                   }`}
-                  onClick={() => setCategorySelected(category)}
+                  onClick={() => {
+                    setCategorySelected(category);
+                    setData([]);
+                    setPage(1);
+                  }}
                 >
                   <Icon />
                   {category.topic}
@@ -88,7 +101,7 @@ export default function HomeAuth() {
             })}
           </ul>
 
-          {isLoading && <Loading />}
+          {isLoading && data.length === 0 && <Loading />}
 
           {!isLoading && data.length === 0 && (
             <div className="font-secondary text-center my-10">
@@ -96,7 +109,7 @@ export default function HomeAuth() {
             </div>
           )}
 
-          {!isLoading && data.length > 0 && (
+          {data.length > 0 && (
             <div className="grid grid-cols-1 sm:grid-cols-2 xmd:grid-cols-3 xl:grid-cols-4 place-items-center sm:place-items-start gap-x-5 gap-y-10 mt-7">
               {data.map((quiz, index) => (
                 <HomeAuthCardQuiz
@@ -109,6 +122,20 @@ export default function HomeAuth() {
             </div>
           )}
         </div>
+        {data.length > 0 && totalQuiz !== data.length && (
+          <div className="flex justify-center items-center my-20">
+            <button
+              disabled={isLoading}
+              className="border border-dark bg-dark text-white px-4 py-1 rounded-lg flex justify-center items-center gap-2"
+              onClick={() => setPage((prev) => prev + 1)}
+            >
+              {isLoading && (
+                <img src={logo} alt="spinner" className="size-3 animate-spin" />
+              )}
+              {isLoading ? "loading..." : "Load More"}
+            </button>
+          </div>
+        )}
       </div>
       <FooterAuth />
     </>

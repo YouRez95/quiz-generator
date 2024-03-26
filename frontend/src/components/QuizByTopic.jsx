@@ -4,30 +4,18 @@ import SubTitleQuiz from "./SubTitleQuiz";
 import { quizPopular } from "../data";
 import Loading from "./Loading";
 import { getQuizzesByTopic } from "../api";
+import logo from "../assets/logo-single-white.png";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
-export default function QuizByTopic({ topic }) {
-  const [dataQuizByTopic, setDataQuizByTopic] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState(null);
-
-  async function handleQuizByTopic() {
-    setLoading(true);
-    try {
-      const resData = await getQuizzesByTopic(topic.topic);
-      setDataQuizByTopic(resData.data);
-      setLoading(false);
-    } catch (err) {
-      setErrorMsg(err.message);
-      setLoading(false);
-    }
-  }
-
-  useEffect(() => {
-    handleQuizByTopic();
-  }, [topic]);
-
+export default function QuizByTopic({
+  topic,
+  setPage,
+  dataQuizByTopic,
+  loading,
+  errorMsg,
+  totalDocs,
+}) {
   if (errorMsg) {
     return <div>{errorMsg}</div>;
   }
@@ -35,14 +23,14 @@ export default function QuizByTopic({ topic }) {
   return (
     <div>
       <SubTitleQuiz title={topic.topic} icon={topic.icon} />
-      {loading && <Loading />}
+      {loading && dataQuizByTopic.length === 0 && <Loading />}
 
       {!loading && dataQuizByTopic.length === 0 && (
         <div className="font-secondary text-center">
           No quizzes created yet, Be the first....
         </div>
       )}
-      {!loading && dataQuizByTopic.length > 0 && (
+      {dataQuizByTopic.length > 0 && (
         <div className="flex flex-col gap-9">
           {dataQuizByTopic.map((quiz) => (
             <div
@@ -79,6 +67,21 @@ export default function QuizByTopic({ topic }) {
               </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {dataQuizByTopic.length > 0 && totalDocs !== dataQuizByTopic.length && (
+        <div className="flex justify-center items-center my-20">
+          <button
+            disabled={loading}
+            className="border border-dark bg-dark text-white px-4 py-1 rounded-lg flex justify-center items-center gap-2"
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            {loading && (
+              <img src={logo} alt="spinner" className="size-3 animate-spin" />
+            )}
+            {loading ? "loading..." : "Load More"}
+          </button>
         </div>
       )}
     </div>

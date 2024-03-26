@@ -3,18 +3,22 @@ import { UserContext } from "../store/user-context";
 import Loading from "./Loading";
 import { getMyQuizzesInDashboard } from "../api";
 import DashboardCardQuizzes from "./DashboardCardQuizzes";
+import logo from "../assets/logo-single-white.png";
 
 export default function DashboardQuizzes() {
   const { token } = useContext(UserContext);
   const [quizzes, setQuizzes] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalDocs, setTotalDocs] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(null);
 
   async function handleDashboardQuizzes() {
     try {
       setIsLoading(true);
-      const resData = await getMyQuizzesInDashboard(token);
-      setQuizzes(resData.data);
+      const resData = await getMyQuizzesInDashboard(token, page);
+      setTotalDocs(resData.numOfQuizzes);
+      setQuizzes((prev) => [...prev, ...resData.data]);
     } catch (err) {
       setErrorMsg(err.message);
     }
@@ -25,7 +29,7 @@ export default function DashboardQuizzes() {
     if (token) {
       handleDashboardQuizzes();
     }
-  }, [token]);
+  }, [token, page]);
 
   if (errorMsg) {
     return <div>{errorMsg}</div>;
@@ -33,7 +37,7 @@ export default function DashboardQuizzes() {
 
   return (
     <>
-      {isLoading && <Loading />}
+      {isLoading && quizzes.length === 0 && <Loading />}
 
       {!isLoading && quizzes.length === 0 ? (
         <div>No quizzes founded</div>
@@ -43,6 +47,21 @@ export default function DashboardQuizzes() {
             <DashboardCardQuizzes quiz={quiz} key={quiz._id} />
           ))}
         </ul>
+      )}
+
+      {quizzes.length > 0 && totalDocs !== quizzes.length && (
+        <div className="flex justify-center items-center my-20">
+          <button
+            disabled={isLoading}
+            className="border border-dark bg-dark text-white px-4 py-1 rounded-lg flex justify-center items-center gap-2"
+            onClick={() => setPage((prev) => prev + 1)}
+          >
+            {isLoading && (
+              <img src={logo} alt="spinner" className="size-3 animate-spin" />
+            )}
+            {isLoading ? "loading..." : "Load More"}
+          </button>
+        </div>
       )}
     </>
   );

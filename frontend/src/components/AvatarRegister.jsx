@@ -3,7 +3,7 @@ import { avatars } from "../data";
 
 export default function AvatarRegister({ onChange, prevAvatar }) {
   const [avatarSelected, setAvatarSelected] = useState(
-    +prevAvatar.split("")[prevAvatar.length - 1] || 1
+    +prevAvatar?.split("")[prevAvatar.length - 1] || 1
   );
 
   function handleSelectAvatar(event, avatarId) {

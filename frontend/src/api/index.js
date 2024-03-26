@@ -111,9 +111,9 @@ export async function getNumberOfQuestion(token, id) {
 }
 
 
-export async function getQuizzesByTopic(topicName){
+export async function getQuizzesByTopic(topicName, page){
   const response = await fetch(
-    API_URL + "/quiz/search/" + topicName
+    API_URL + "/quiz/search/" + topicName + "?page=" + page
   );
 
   const resData = await response.json();
@@ -124,9 +124,9 @@ export async function getQuizzesByTopic(topicName){
   return resData;
 }
 
-export async function getQuizzesByTopicAuth(topicName, token){
+export async function getQuizzesByTopicAuth(topicName, token, page){
   const response = await fetch(
-    API_URL + "/quiz/search/auth/" + topicName,
+    API_URL + "/quiz/search/auth/" + topicName + '?page='+page,
     {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -155,9 +155,9 @@ export async function getTheThenPopularQuiz() {
     return resData;
 }
 
-export async function getTheThenPopularQuizAuth(token) {
+export async function getTheThenPopularQuizAuth(token, page) {
   const response = await fetch(
-    API_URL + "/quiz/auth/popularQuiz", {
+    API_URL + "/quiz/auth/popularQuiz?page="+page, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -171,8 +171,8 @@ export async function getTheThenPopularQuizAuth(token) {
 
 
 
-export async function getMyQuizzesInDashboard(token){
-  const response = await fetch(API_URL + "/quiz/quizzes", {
+export async function getMyQuizzesInDashboard(token, page){
+  const response = await fetch(API_URL + "/quiz/quizzes?page="+page, {
       headers: {
         Authorization: `Bearer ${token}`,
       },
@@ -255,8 +255,8 @@ export async function postCreateComments(quizId, text, token){
 }
 
 
-export async function getTheDraftQuiz(token){
-  const response = await fetch(`${API_URL}/quiz/draft`, {
+export async function getTheDraftQuiz(token, page){
+  const response = await fetch(`${API_URL}/quiz/draft?page=${page}`, {
     headers: {
       Authorization: `bearer ${token}`,
     },
@@ -343,7 +343,7 @@ export async function postTheScore(quizId, score, token){
 
 export async function getQuestionForSpecificQuiz(quizId, token) {
   const response = await fetch(
-    `http://localhost:5000/api/v1/user/my-questions/${quizId}`,
+    `${API_URL}/user/my-questions/${quizId}`,
     {
       headers: {
         Authorization: `Bearer ${token}`,
@@ -356,7 +356,7 @@ export async function getQuestionForSpecificQuiz(quizId, token) {
 
 export async function postQuestionFromDashboard(quizId, data, token) {
   const response = await fetch(
-    `http://localhost:5000/api/v1/quiz/add-question/${quizId}`,
+    `${API_URL}/quiz/add-question/${quizId}`,
     {
       method: "POST",
       body: JSON.stringify(data),
@@ -376,7 +376,7 @@ export async function postQuestionFromDashboard(quizId, data, token) {
 
 export async function putQuestionFromDashboard(quizId, data, token, questionId) {
   const response = await fetch(
-    `http://localhost:5000/api/v1/user/update-question/${quizId}/${questionId}`,
+    `${API_URL}/user/update-question/${quizId}/${questionId}`,
     {
       method: "PUT",
       body: JSON.stringify(data),
@@ -394,3 +394,48 @@ export async function putQuestionFromDashboard(quizId, data, token, questionId) 
   return resData;
 }
 
+export async function deleteNotification(notificationId, token){
+  const response = await fetch(
+    API_URL + "/user/notifications/" + notificationId,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+
+  return response;
+}
+
+
+export async function getStatistiques(token){
+  const response = await fetch(
+    API_URL + "/user/statistique",
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+
+  const dataStatistique = await response.json();
+
+  return dataStatistique;
+}
+
+
+export async function notifications(token){
+  const response = await fetch(
+    API_URL + "/user/notifications",
+    {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    }
+  );
+
+  const resData = await response.json();
+
+  return resData;
+}

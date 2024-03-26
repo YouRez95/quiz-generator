@@ -1,11 +1,20 @@
 import React, { useContext } from "react";
 import { UserContext } from "../store/user-context";
+import { deleteNotification } from "../api/index";
 
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 export default function DashboardNotifications() {
-  const { notifications } = useContext(UserContext);
+  const { notifications, token, setNotifications } = useContext(UserContext);
 
-  console.log("notifi", notifications);
+  async function handleClearNotification(notificationId) {
+    const response = await deleteNotification(notificationId, token);
+    if (response.ok) {
+      setNotifications((prev) =>
+        prev.filter((noti) => noti._id !== notificationId)
+      );
+    }
+  }
+
   return (
     <div className="pt-20 grid gap-10">
       <h1 className="text-dark font-secondary text-xl font-bold">
@@ -62,7 +71,10 @@ export default function DashboardNotifications() {
                 </p>
               </div>
 
-              <button className="bg-dark px-3 py-1 text-light font-secondary">
+              <button
+                className="bg-dark px-3 py-1 text-light font-secondary"
+                onClick={() => handleClearNotification(notification._id)}
+              >
                 Clear
               </button>
             </div>

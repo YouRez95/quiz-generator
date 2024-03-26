@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postUserLogin, postUserSignup, changeUserProfile, likeQuiz, postCommentQuiz, getCommentQuiz, postTheScoreQuiz, updateQuiz, getMyQuestionsForSpecificQuiz, updateMyQuestion, deleteQuestion } from "../controllers/userControllers.js";
+import { postUserLogin, postUserSignup, changeUserProfile, likeQuiz, postCommentQuiz, getCommentQuiz, postTheScoreQuiz, updateQuiz, getMyQuestionsForSpecificQuiz, updateMyQuestion, deleteQuestion, getNotification, clearNotification, getStatistique } from "../controllers/userControllers.js";
 import { validationLogin, validationSignUp } from "../utils/validation.js";
 import isAuthenticated from "../middelwares/isAuth.js";
 const router = Router();
@@ -145,5 +145,37 @@ router.put('/update-question/:quizId/:questionId', isAuthenticated, updateMyQues
     500: Server error -> {message: "something wrong try again later"}
 */
 router.delete('/delete-question/:quizId/:questionId', isAuthenticated, deleteQuestion)
+
+/**
+@desc user can see their  notification
+@route api/v1/user/notifications
+@method GET
+@access Private
+@responses
+
+*/
+router.get('/notifications', isAuthenticated, getNotification)
+
+/**
+@desc when useer see notifications is cleared from db
+@route api/v1/user/notifications/:id
+@method DELETE
+@access Private
+@responses
+
+*/
+router.delete('/notifications/:id', isAuthenticated, clearNotification)
+
+
+/**
+@desc statistique of user
+@route a/api/v1/user/statistique
+@method GET
+@access Private
+@responses
+
+*/
+router.get('/statistique', isAuthenticated, getStatistique);
+
 
 export default router;
