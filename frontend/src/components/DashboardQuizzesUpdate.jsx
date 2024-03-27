@@ -79,21 +79,21 @@ export default function DashboardQuizzesUpdate() {
 
   return (
     <>
-      <div>
-        <div className="flex gap-10">
+      <div className="mb-32">
+        <div className="flex flex-col 3xl:flex-row gap-10">
           <div className="grid gap-5 flex-1">
             <InputWithEmojis
               setTitleInput={setTitle}
               titleInput={title}
               tagHtml="input"
-              className="outline-none ml-5 text-lg font-secondary font-bold"
+              className="outline-none border-b border-dark-3 rounded-lg w-full max-w-[500px] max-h-[60px] min-h-[40px] h-full text-base font-bold font-secondary overflow-hidden pl-2"
             />
 
             <InputWithEmojis
               setTitleInput={setDescription}
               titleInput={description}
               tagHtml="textarea"
-              className="outline-none ml-5 text-lg font-secondary font-bold w-full"
+              className=" outline-none border-y border-dark-3 rounded-lg w-full max-w-[500px] min-h-[100px] text-base font-bold font-secondary overflow-hidden pl-2"
             />
             <TopicSelectedInForm
               topicSelected={category}
@@ -106,37 +106,20 @@ export default function DashboardQuizzesUpdate() {
               setFile={setFile}
               prevImage={`${BASE_URL}/${file}`}
             />
-            {/* <div className="flex-1">
-                <label
-                  htmlFor="numberQuestion"
-                  className="text-md font-bold font-secondary mb-3 block"
-                >
-                  You can add more than {numQuestion} questions :
-                </label>
-                <input
-                  className="border border-dark w-20 h-10 outline-none text-center"
-                  id="numberQuestion"
-                  type="number"
-                  value={numQuestion}
-                  max={10}
-                  min={numQuestion}
-                  onChange={(e) => setNumQuestion(e.target.value)}
-                />
-              </div> */}
           </div>
         </div>
 
         <div className="grid gap-3">
-          <p className="text-md font-bold font-secondary">
+          <p className="text-sm  md:text-base font-bold font-secondary">
             You Want your Quiz to be :
           </p>
-          <div className="flex gap-20">
+          <div className="flex gap-20 text-sm md:text-base">
             <div className="flex gap-2 items-center">
               <input
                 name="isPublic"
                 id="public"
                 type="radio"
-                className="border w-6 h-6 relative"
+                className="border size-5 md:size-6 relative"
                 onChange={handleChangeRadio}
                 checked={isPublic}
               />
@@ -148,9 +131,8 @@ export default function DashboardQuizzesUpdate() {
                 name="isPublic"
                 id="private"
                 type="radio"
-                className="border w-6 h-6 relative"
+                className="border size-5 md:size-6 relative"
                 onChange={handleChangeRadio}
-                checked={!isPublic}
               />
               <label htmlFor="private">Private</label>
             </div>
@@ -159,14 +141,14 @@ export default function DashboardQuizzesUpdate() {
 
         <div className="mt-7 flex gap-7">
           <button
-            className="bg-dark text-light px-3 py-2"
+            className="bg-dark text-light px-2 py-1 text-sm"
             onClick={handleUpdateQuiz}
           >
             {loading && "Loading ..."}
             {!loading && "Update Quiz Info"}
           </button>
           <button
-            className="bg-light text-dark border border-dark px-3 py-2"
+            className="bg-light text-dark border border-dark px-2 py-1 text-sm"
             onClick={() => navigate("..")}
           >
             Back
@@ -175,8 +157,6 @@ export default function DashboardQuizzesUpdate() {
 
         {isSuccess && <p className="font-secondary">{isSuccess}</p>}
       </div>
-
-      {/* {pageUpdate === "questions" && <DashboardQuizzesUpdateQuestions />} */}
     </>
   );
 }

@@ -45,14 +45,17 @@ export default function HomeAuth() {
         page
       );
     }
+
     setTotalQuiz(dataSelected.numOfQuizzes);
     setData((prevData) => [...prevData, ...dataSelected.data]);
     setIsLoading(false);
   }
 
   useEffect(() => {
-    handleData();
-  }, [categorySelected, page]);
+    if (token) {
+      handleData();
+    }
+  }, [categorySelected, page, token]);
 
   useEffect(() => {
     const socket = socketConnection();

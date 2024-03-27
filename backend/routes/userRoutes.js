@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postUserLogin, postUserSignup, changeUserProfile, likeQuiz, postCommentQuiz, getCommentQuiz, postTheScoreQuiz, updateQuiz, getMyQuestionsForSpecificQuiz, updateMyQuestion, deleteQuestion, getNotification, clearNotification, getStatistique } from "../controllers/userControllers.js";
+import { postUserLogin, postUserSignup, changeUserProfile, likeQuiz, postCommentQuiz, getCommentQuiz, postTheScoreQuiz, updateQuiz, getMyQuestionsForSpecificQuiz, updateMyQuestion, deleteQuestion, getNotification, clearNotification, getStatistique, getQuizAndQuestions, createScore } from "../controllers/userControllers.js";
 import { validationLogin, validationSignUp } from "../utils/validation.js";
 import isAuthenticated from "../middelwares/isAuth.js";
 const router = Router();
@@ -169,13 +169,34 @@ router.delete('/notifications/:id', isAuthenticated, clearNotification)
 
 /**
 @desc statistique of user
-@route a/api/v1/user/statistique
+@route api/v1/user/statistique
 @method GET
 @access Private
 @responses
 
 */
 router.get('/statistique', isAuthenticated, getStatistique);
+
+/**
+@desc statistique of user
+@route api/v1/user/quiz-info/:quizId
+@method GET
+@access Private
+@responses
+
+*/
+router.get('/quiz-info/:quizId', isAuthenticated, getQuizAndQuestions);
+
+
+/**
+@desc ceate score
+@route api/v1/user/create-score
+@method POST
+@access Private
+@responses
+
+*/
+router.post('/create-score/:quizId', isAuthenticated, createScore);
 
 
 export default router;

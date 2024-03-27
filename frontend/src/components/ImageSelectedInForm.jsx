@@ -17,7 +17,7 @@ export default function ImageSelectedInForm({ setFile, prevImage }) {
           : "Choose a profile picture for your quiz"}
       </p>
       <label
-        className="w-10 h-10 rounded-full border flex justify-center items-center cursor-pointer self-center mt-2"
+        className="w-10 h-10 rounded-full border flex justify-center items-center cursor-pointer self-start ml-10 3xl:ml-0 3xl:self-center mt-2"
         htmlFor="back-img"
       >
         <RiUpload2Line className="flex" />
@@ -31,7 +31,11 @@ export default function ImageSelectedInForm({ setFile, prevImage }) {
         onChange={handleChangeImg}
       />
       {prevImage && !image && (
-        <img src={prevImage} alt="" className="w-60 cover self-center mt-2" />
+        <img
+          src={prevImage}
+          alt=""
+          className="w-60 cover self-start 3xl:self-center mt-2"
+        />
       )}
       {image && (
         <img

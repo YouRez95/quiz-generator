@@ -369,7 +369,6 @@ export async function getNotification(req, res) {
 }
 
 export async function clearNotification(req, res) {
-  const userId = req.userId;
   const notoficationId = req.params.id
   console.log(notoficationId)
   try {
@@ -379,4 +378,59 @@ export async function clearNotification(req, res) {
     console.log(err)
     res.status(500).json({message: "something wrong"})
   }
+}
+
+
+export async function getQuizAndQuestions(req, res) {
+  const {quizId} = req.params
+  console.log('test')
+  try {
+    
+    const quiz = await Quiz.findById(quizId).select('title description category numQuestion isComplete backImage');
+    if (!quiz || !quiz.isComplete) {
+      const error = new Error('Quiz Not Found')
+      error.statusCode = 400
+      throw error;
+    }
+    const questions = await Question.find({quizId})
+    let questionsToSend = []
+    for (let i = 0; i < questions.length; i++){
+      const options = [questions[i].correctAnswer, ...questions[i].answerOptions];
+      const optionsShuffled = options.sort(() => Math.random() - 0.5);
+      questionsToSend.push({
+        _id: questions[i]._id,
+        question: questions[i].question,
+        options: optionsShuffled
+      })
+    }
+    res.status(200).json({quiz, questions: questionsToSend })
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+
+export async function createScore(req, res) {
+  console.log("request")
+  const {answers} = req.body;
+  const {quizId} = req.params;
+  const userId = req.userId;
+
+  let totalScore = 0;
+  let wrong = 0;
+  let correct = 0;
+  for (let i = 0; i < answers.length; i++){
+    const question = await Question.findById(answers[i]._id);
+    if (answers[i].answer === question.correctAnswer){
+      totalScore++;
+      correct += 1;
+    } else  {
+      wrong += 1;
+    }
+  }
+  const endScore =  totalScore + '/' + answers.length
+
+  const score = await Score.create({userId, quizId, score: endScore})
+
+  res.status(200).json({...score._doc, wrong, correct})
 }

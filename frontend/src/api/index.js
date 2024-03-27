@@ -324,23 +324,6 @@ export async function putUpdateUserData(updateUserData, token) {
 }
 
 
-export async function postTheScore(quizId, score, token){
-  const response = await fetch(
-    `${API_URL}/user/score-quiz/${quizId}`,
-    {
-      method: "POST",
-      body: JSON.stringify({ score }),
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    }
-  );
-
-  const resData = await response.json();
-}
-
-
 export async function getQuestionForSpecificQuiz(quizId, token) {
   const response = await fetch(
     `${API_URL}/user/my-questions/${quizId}`,
@@ -438,4 +421,56 @@ export async function notifications(token){
   const resData = await response.json();
 
   return resData;
+}
+
+
+export async function removeQuestion(quizId, questionId){
+  const response = await fetch(
+    `${API_URL}/user/delete-question/${quizId}/${questionId}`,
+    {
+      method: "DELETE",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  const resData = await response.json();
+
+  return resData;
+}
+
+
+
+export async function getQuizAndQuestions(id, token) {
+  const response = await fetch(
+    `${API_URL}/user/quiz-info/${id}`,
+    {
+      headers: {
+        authorization: "Bearer " + token,
+      },
+    }
+  );
+
+  const data = await response.json()
+
+  return data;
+}
+
+
+export async function postTheScore(quizId, token, answers){
+  const response = await fetch(
+    `${API_URL}/user/create-score/${quizId}`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        authorization: "Bearer " + token,
+      },
+      body: JSON.stringify({ answers }),
+    }
+  );
+
+  const data = await response.json();
+
+  return data;
 }

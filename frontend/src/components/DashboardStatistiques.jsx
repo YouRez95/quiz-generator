@@ -44,7 +44,7 @@ export default function DashboardStatistiques() {
                     statistiques.quizCreatedNotCompleted}
                 </span>
 
-                <div className="absolute text-[12px] text-dark flex flex-col gap-2 p-2 opacity-0 group-hover:opacity-100 transition-all bg-white top-[50%] left-1 rounded-md shadow-md shadow-dark">
+                <div className="absolute z-10 text-[12px] text-dark flex flex-col gap-2 p-2 opacity-0 group-hover:opacity-100 transition-all bg-white top-[50%] left-1 rounded-md shadow-md shadow-dark">
                   <span className="font-secondary">
                     Completed: {statistiques.quizCreatedCompleted}
                   </span>

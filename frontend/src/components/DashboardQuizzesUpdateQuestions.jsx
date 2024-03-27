@@ -4,6 +4,7 @@ import {
   putQuestionFromDashboard,
   getQuestionForSpecificQuiz,
   getSingleQuizToDashboard,
+  removeQuestion,
 } from "../api";
 import { useContext, useEffect, useState } from "react";
 import { UserContext } from "../store/user-context";
@@ -144,16 +145,7 @@ function DashboardQuizzesUpdateQuestions({ draft }) {
   async function handleRemoveQuestion(questionId) {
     try {
       if (typeof questionId === "string") {
-        const response = await fetch(
-          `http://localhost:5000/api/v1/user/delete-question/${quizId}/${questionId}`,
-          {
-            method: "DELETE",
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
-        const resData = await response.json();
+        const resData = await removeQuestion(quizId, questionId);
         setSuccessMsg(resData.message);
       }
 
@@ -191,7 +183,7 @@ function DashboardQuizzesUpdateQuestions({ draft }) {
   }
 
   return (
-    <div className="flex flex-col justify-center items-center gap-20">
+    <div className="flex flex-col justify-center items-center gap-20 mb-20">
       <div className="flex justify-center items-center">
         <ul className="flex justify-center gap-10 relative w-fit">
           {questionData.map((question, index) => (
@@ -209,7 +201,7 @@ function DashboardQuizzesUpdateQuestions({ draft }) {
           <div className="absolute bg-dark w-full h-[1px] top-[50%] translate-y-[–50%] z-[-1]" />
         </ul>
       </div>
-      <div className="border w-[90%] p-5 text-dark rounded-lg">
+      <div className="border w-[90vw] sm:w-[90%] p-5 text-dark rounded-lg">
         <div className="my-2 flex justify-between">
           <Link
             to=".."
@@ -236,7 +228,7 @@ function DashboardQuizzesUpdateQuestions({ draft }) {
             </button>
           )}
         </div>
-        <div className="font-secondary grid grid-cols-[200px_minmax(500px,_1fr)]">
+        <div className="font-secondary grid grid-cols-1 3xl:grid-cols-[200px_minmax(500px,_1fr)]">
           <label className="font-bold text-2xl" htmlFor="question">
             Question :{" "}
           </label>
@@ -249,7 +241,7 @@ function DashboardQuizzesUpdateQuestions({ draft }) {
           />
         </div>
         <ul className="grid gap-5 mt-5">
-          <li className="font-secondary grid grid-cols-[200px_minmax(500px,_1fr)]">
+          <li className="font-secondary grid grid-cols-1 3xl:grid-cols-[200px_minmax(500px,_1fr)]">
             <label className="font-bold" htmlFor="correct-answer">
               Correct answer :{" "}
             </label>
@@ -264,7 +256,7 @@ function DashboardQuizzesUpdateQuestions({ draft }) {
           {optionsUpdated.map((option, index) => (
             <li
               key={`${option}-${index}`}
-              className="font-secondary grid grid-cols-[200px_minmax(500px,_1fr)]"
+              className="font-secondary grid grid-cols-1 3xl:grid-cols-[200px_minmax(500px,_1fr)]"
             >
               <label className="font-bold" htmlFor={`option-${index}`}>
                 Option {index + 1} :{" "}
@@ -284,7 +276,7 @@ function DashboardQuizzesUpdateQuestions({ draft }) {
           ))}
         </ul>
 
-        <div className="my-10 flex justify-end pr-20 gap-10">
+        <div className="my-10 grid grid-cols-2 justify-center gap-5">
           {optionsUpdated.length < 3 && (
             <button
               className="bg-white border border-dark text-dark px-3 py-2"
