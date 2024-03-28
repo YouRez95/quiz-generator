@@ -42,7 +42,7 @@ export default function HomeNotAuth() {
       <div className="bg-dark border-b-2 border-light overflow-hidden">
         <div className=" min-h-[45vh] relative overflow-hidden layer">
           <MainHome />
-          <div className="absolute -top-[20%] right-10 w-[500px] h-[500px] hidden xmd:block">
+          <div className="absolute -top-[20%] right-10 w-[600px] h-[600px] hidden xmd:block">
             <img src={backHomeDark} className="object-cover" alt="" />
           </div>
         </div>
