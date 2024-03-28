@@ -51,7 +51,6 @@ export default function Header({ inCreateQuiz }) {
     });
 
     socketState?.on("receiveCommentsPost", (data) => {
-      console.log(data);
       setNotifications((prev) => [...prev, data]);
     });
   }, [socketState]);
@@ -71,8 +70,6 @@ export default function Header({ inCreateQuiz }) {
       setNotifications((prev) => [...prev, newNotification]);
     }
   }
-
-  console.log(notifications);
 
   useEffect(() => {
     if (token) {

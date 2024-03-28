@@ -474,3 +474,12 @@ export async function postTheScore(quizId, token, answers){
 
   return data;
 }
+
+export async function deleteQuiz(quizId, token){
+  await fetch("http://localhost:5000/api/v1/user/delete-quiz/" + quizId, {
+    method: "DELETE",
+    headers: {
+      authorization: "Bearer " + token,
+    },
+  });
+}

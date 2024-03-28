@@ -25,7 +25,6 @@ export default function QuizPopular() {
   async function fetchThePopularQuestion() {
     setIsLoading(true);
     const resData = await getTheThenPopularQuiz();
-    console.log(resData);
     setPopularQuiz(resData.data);
     setIsLoading(false);
   }

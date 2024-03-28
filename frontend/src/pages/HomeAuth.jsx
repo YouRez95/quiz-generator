@@ -19,7 +19,6 @@ const categories = [
 ];
 
 export default function HomeAuth() {
-  console.log("render");
   const { token, user, setSocketState, socketState } = useContext(UserContext);
   const [page, setPage] = useState(1);
   const [totalQuiz, setTotalQuiz] = useState(0);

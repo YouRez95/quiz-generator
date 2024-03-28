@@ -105,7 +105,6 @@ function DashboardQuizzesUpdateQuestions({ draft }) {
         });
       }
       setSuccessMsg(resData.message);
-      console.log(questionData);
       setLoadingUpdate(false);
     } catch (err) {
       setErrorMsg(err.message);

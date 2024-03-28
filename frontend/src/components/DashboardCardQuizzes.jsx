@@ -1,15 +1,27 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { GoHeart } from "react-icons/go";
 import { LiaCommentSolid } from "react-icons/lia";
 import { FiEdit2 } from "react-icons/fi";
-
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+import { AiOutlineDelete } from "react-icons/ai";
 import { IoIosArrowDown } from "react-icons/io";
 import { Link } from "react-router-dom";
+import { UserContext } from "../store/user-context";
+import { deleteQuiz } from "../api";
 
-export default function DashboardCardQuizzes({ quiz }) {
+const BASE_URL = import.meta.env.VITE_BASE_URL;
+
+export default function DashboardCardQuizzes({ quiz, setQuizzes }) {
+  const { token } = useContext(UserContext);
   const [updateBtn, setUpdateBtn] = useState(false);
   const [isHover, setIsHover] = useState(false);
+
+  async function handleDeleteQuiz() {
+    setQuizzes((prevQuizzes) => {
+      return prevQuizzes.filter((qz) => qz._id !== quiz._id);
+    });
+    await deleteQuiz(quiz._id, token);
+  }
+
   return (
     <li
       key={quiz._id}
@@ -29,6 +41,12 @@ export default function DashboardCardQuizzes({ quiz }) {
         <div className="bg-dark opacity-50 absolute w-full h-full top-0 bottom-0 hidden group-hover:block" />
         <button className="absolute top-[50%] left-[50%] translate-x-[-50%] translate-y-[-50%] bg-light text-dark font-secondary px-4 py-2 hidden group-hover:block hover:bg-dark-2 hover:text-light">
           See Demo
+        </button>
+        <button
+          className="absolute top-2 right-2 bg-light size-6 text-xl flex items-center justify-center rounded-full hover:bg-dark-2 hover:text-light"
+          onClick={handleDeleteQuiz}
+        >
+          <AiOutlineDelete />
         </button>
       </div>
 

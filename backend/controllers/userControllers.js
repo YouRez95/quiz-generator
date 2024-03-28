@@ -434,3 +434,19 @@ export async function createScore(req, res) {
 
   res.status(200).json({...score._doc, wrong, correct})
 }
+
+// DELETE -> api/v1/user/delete-quiz/:quizId
+export async function deleteQuiz(req, res)  {
+  const {quizId} = req.params;
+ 
+  await Question.deleteMany({quizId});
+  const quiz = await Quiz.findByIdAndDelete(quizId)
+
+  const __dirname = import.meta.dirname;
+  const pathToImage = path.join(__dirname, '..', 'public', quiz.backImage)
+  fs.unlink(pathToImage, (err)  => {
+    if (err) throw err;
+  })
+
+  res.status(200).json({message: "success"});
+}

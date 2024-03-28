@@ -62,7 +62,6 @@ export default function DashboardQuizzesUpdate() {
       setLoading(false);
       setIsSuccess("Your quiz is successfully updated");
     } catch (err) {
-      console.log(err);
       setIsSuccess("Your quiz is failed to updated");
     }
   }

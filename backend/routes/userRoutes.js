@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { postUserLogin, postUserSignup, changeUserProfile, likeQuiz, postCommentQuiz, getCommentQuiz, postTheScoreQuiz, updateQuiz, getMyQuestionsForSpecificQuiz, updateMyQuestion, deleteQuestion, getNotification, clearNotification, getStatistique, getQuizAndQuestions, createScore } from "../controllers/userControllers.js";
+import { postUserLogin, postUserSignup, changeUserProfile, likeQuiz, postCommentQuiz, getCommentQuiz, postTheScoreQuiz, updateQuiz, getMyQuestionsForSpecificQuiz, updateMyQuestion, deleteQuestion, getNotification, clearNotification, getStatistique, getQuizAndQuestions, createScore, deleteQuiz } from "../controllers/userControllers.js";
 import { validationLogin, validationSignUp } from "../utils/validation.js";
 import isAuthenticated from "../middelwares/isAuth.js";
 const router = Router();
@@ -194,9 +194,19 @@ router.get('/quiz-info/:quizId', isAuthenticated, getQuizAndQuestions);
 @method POST
 @access Private
 @responses
-
 */
 router.post('/create-score/:quizId', isAuthenticated, createScore);
+
+/**
+@desc ceate score
+@route api/v1/user/delete-quiz/:quizId
+@method DELETE
+@access Private
+@responses
+*/
+router.delete('/delete-quiz/:quizId', isAuthenticated, deleteQuiz);
+
+// DELETE -> api/v1/user/delete-quiz/:quizId
 
 
 export default router;

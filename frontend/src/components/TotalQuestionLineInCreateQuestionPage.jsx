@@ -29,8 +29,6 @@ export default function TotalQuestionLineInCreateQuestionPage({
     }
   }, [token]);
 
-  console.log(totalQuestion);
-
   return (
     <div className="flex w-[90vw] md:w-[700px]  justify-center items-center m-auto">
       <div
